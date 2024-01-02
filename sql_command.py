@@ -1,99 +1,69 @@
 import mysql.connector
-import pandas as pd
 
 # Note: Please use string as all arguments' type
 
-def createFavouriteList(uid, listname):
-    mydb = mysql.connector.connect(
-        host="140.113.68.114",
-        port="3306",
-        user="manager",
-        password="toServer111550009",
-        database="db_final"
-    )
-    mycursor = mydb.cursor()
-    sql_command = "select max(listid) from favourite_list_data"
-    mycursor.execute(sql_command)
-    results = mycursor.fetchall()
-    mycursor.reset()
-    try:
-        lid = int(results[0][0]) + 1
-    except:
-        lid = 1
-    lid =str(lid)
-    mytup = (lid, listname, uid)
-    sql_command = "insert into favourite_list_data values (%s, %s, %s, NULL)"
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="manager",
+    password="toServer111550009",
+    database="db_final"
+)
+mycursor = mydb.cursor()
+
+# (id): new list id
+def createFList(uid, listname):
+    global mydb, mycursor
+    mytup = (listname, uid)
+    sql_command = "insert into flist_conn_data (listname, userid) values (%s, %s)"
     mycursor.execute(sql_command, mytup)
     mydb.commit()
     mycursor.reset()
-    # check
-    sql_command = "select * from favourite_list_data"
+    sql_command = "select last_insert_id()"
     mycursor.execute(sql_command)
     results = mycursor.fetchall()
     mycursor.reset()
-    for x in results:
-        print(x)
-    mycursor.close()
-    mydb.close()
+    id = int(results[0][0])
+    return id
 
-def deleteFavouriteList(listid):
-    mydb = mysql.connector.connect(
-        host="140.113.68.114",
-        port="3306",
-        user="manager",
-        password="toServer111550009",
-        database="db_final"
-    )
-    mycursor = mydb.cursor()
-    sql_command = "delete from favourite_list_data where listid = %s"
+def deleteFList(listid):
+    global mydb, mycursor
     mytup = (listid, )
+    sql_command = "delete from flist_data where listid = %s"
     mycursor.execute(sql_command, mytup)
     mydb.commit()
     mycursor.reset()
-    # check
-    sql_command = "select * from favourite_list_data where listid = %s"
+    sql_command = "delete from flist_conn_data where listid = %s"
     mycursor.execute(sql_command, mytup)
-    results = mycursor.fetchall()
+    mydb.commit()
     mycursor.reset()
-    for x in results:
-        print(x)
-    mycursor.close()
-    mydb.close()
 
-def deleteUserFavouriteLists(uid):
-    mydb = mysql.connector.connect(
-        host="140.113.68.114",
-        port="3306",
-        user="manager",
-        password="toServer111550009",
-        database="db_final"
-    )
-    mycursor = mydb.cursor()
-    sql_command = "delete from favourite_list_data where userid = %s"
+def deleteUserFLists(uid):
+    global mydb, mycursor
     mytup = (uid, )
-    mycursor.execute(sql_command, mytup)
-    mydb.commit()
-    mycursor.reset()
-    # check
-    sql_command = "select * from favourite_list_data where userid = %s"
+    sql_command = "select listid from flist_conn_data where userid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     mycursor.reset()
-    for x in results:
-        print(x)
-    mycursor.close()
-    mydb.close()
+    for col in results:
+        try:
+            lid = int(col[0])
+            mytup = (lid, )
+            sql_command = "delete from flist_data where listid = %s"
+            mycursor.execute(sql_command, mytup)
+            mydb.commit()
+            mycursor.reset()
+        except:
+            break
+    mytup = (uid, )
+    sql_command = "delete from flist_conn_data where userid = %s"
+    mycursor.execute(sql_command, mytup)
+    mydb.commit()
+    mycursor.reset()
 
+# -1: account has been used (id): new account id
 def createUserAccount(userName, userPass):
-    mydb = mysql.connector.connect(
-        host="140.113.68.114",
-        port="3306",
-        user="manager",
-        password="toServer111550009",
-        database="db_final"
-    )
-    mycursor = mydb.cursor()
-    sql_command = "select count(username) from user_data where username = %s;"
+    global mydb, mycursor
+    sql_command = "select count(username) from user_data where username = %s"
     mytup = (userName, )
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
@@ -101,79 +71,67 @@ def createUserAccount(userName, userPass):
     cnt = int(results[0][0])
     if cnt != 0:
         print("This username has been used\nPlease choose another one.")
-        mycursor.close()
-        mydb.close()
-        return
-    sql_command = "select max(userid) from user_data"
-    mycursor.execute(sql_command)
-    results = mycursor.fetchall()
-    mycursor.reset()
-    try:
-        cnt = int(results[0][0])
-    except:
-        cnt = 0
-    newid = str(cnt + 1);
-    mytup = (newid, userName, userPass)
-    sql_command = "insert into user_data values (%s, %s, %s)"
+        return -1
+    mytup = (userName, userPass)
+    sql_command = "insert into user_data (username, userpassword) values (%s, %s)"
     mycursor.execute(sql_command, mytup)
     mydb.commit()
     mycursor.reset()
-    # check
-    sql_command = "select * from user_data"
+    sql_command = "select last_insert_id()"
     mycursor.execute(sql_command)
     results = mycursor.fetchall()
     mycursor.reset()
-    for x in results:
-        print(x)
-    mycursor.close()
-    mydb.close()
+    id = int(results[0][0])
+    return id
 
-def deleteUserAccount(userName, userPass):
-    mydb = mysql.connector.connect(
-        host="140.113.68.114",
-        port="3306",
-        user="manager",
-        password="toServer111550009",
-        database="db_final"
-    )
-    mycursor = mydb.cursor()
-    sql_command = "select userid, userpassword from user_data where username = %s"
-    mytup = (userName, )
+# -1: account does not exist 0: password fail 1: success
+def deleteUserAccount(uid, userPass):
+    global mydb, mycursor
+    sql_command = "select * from user_data where userid = %s"
+    mytup = (uid, )
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     mycursor.reset()
-    if len(results) == 0:
+    try:
+        password = str(results[0][2])
+    except:
         print("Account does not exist.\nPlease try again.")
-        mycursor.close()
-        mydb.close()
-        return
-    upass = str(results[0][1])
-    uid = int(results[0][0])
-    if upass != userPass:
-        print("Your password is incorrect.\nPlease try again.")
-        mycursor.close()
-        mydb.close()
-        return
-    deleteUserFavouriteLists(uid)
+        return -1
+    if userPass != password:
+        print("Password Incorrect.\nPlease try again.")
+        return 0
+    deleteUserFLists(uid)
     mytup = (uid, )
     sql_command = "delete from user_data where userid = %s"
     mycursor.execute(sql_command, mytup)
     mydb.commit()
     mycursor.reset()
-    # check
-    sql_command = "select * from user_data"
-    mycursor.execute(sql_command)
+    return 1
+
+# -1: account does not exist 0: password fail (id): login
+def login(userName, userPass):
+    global mydb, mycursor
+    sql_command = "select * from user_data where username = %s"
+    mytup = (userName, )
+    mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     mycursor.reset()
-    for x in results:
-        print(x)
-    mycursor.close()
-    mydb.close()
+    try:
+        id = int(results[0][0])
+        password = str(results[0][2])
+    except:
+        print("Account does not exist.\nPlease try again.")
+        return -1
+    if userPass == password:
+        print("Success.\n")
+        return id
+    else:
+        print("Password Incorrect.\nPlease try again.")
+        return 0
 
 """
 testing data
 createUserAccount("A","0800000123")
-createFavouriteList("1","MYT")
-deleteUserAccount("A","0800000123")
-
+deleteUserAccount("1","0800000123")
+createFList(str(uid),"MHY")
 """
