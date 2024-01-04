@@ -242,10 +242,12 @@ def login(userName, userPass):
     return id
 
 # input should be a list
-# list[id] sorted by match tags
-def searchByTags(taglist):
+# -1: input type not list, list[id] sorted by match tags
+def searchByTag(taglist):
     global mydb, mycursor
-    sql_command = "SELECT sb.appid FROM steam_basic_data AS sb WHERE genres LIKE %s OR categories like %s OR steamspy_tags like %s limit 100"
+    if type(taglist) != list:
+        return -1
+    sql_command = "SELECT sb.appid FROM steam_basic_data AS sb WHERE genres LIKE %s OR categories like %s OR steamspy_tags like %s"
     appdict = dict()
     for tag in taglist:
         mytup = ("%"+tag+"%", "%"+tag+"%", "%"+tag+"%")
@@ -258,7 +260,41 @@ def searchByTags(taglist):
                 appdict[id] = 1
             else:
                 appdict[id] += 1
-    applist = sorted(appdict)
+    applist = sorted(appdict.items(), key = lambda x:(x[1],x[0]), reverse=True)
+    for i in range(len(applist)):
+        applist[i] = applist[i][0]
+    return applist
+
+# input should be a list
+# -1: input type not list, list[id] sorted by match words and accuracy
+def searchByName(wordlist):
+    global mydb, mycursor
+    if type(wordlist) != list:
+        return -1
+    sql_command = "SELECT sb.appid FROM steam_basic_data AS sb WHERE sb.name LIKE %s"
+    appdict = dict()
+    for word in wordlist:
+        mytup = ("%"+word+"%",)
+        mycursor.execute(sql_command, mytup)
+        results = mycursor.fetchall()
+        mycursor.reset()
+        for col in results:
+            id = int(col[0])
+            if id not in appdict:
+                appdict[id] = 1
+            else:
+                appdict[id] += 1
+        sql_command = "SELECT sb.appid FROM steam_basic_data AS sb WHERE sb.name LIKE %s OR sb.name LIKE %s OR sb.name LIKE %s OR sb.name LIKE %s"
+        mytup = ("% "+word+" %", word+" %", "% "+word, word)
+        mycursor.execute(sql_command, mytup)
+        results = mycursor.fetchall()
+        mycursor.reset()
+        for col in results:
+            id = int(col[0])
+            appdict[id] += 100
+    applist = sorted(appdict.items(), key = lambda x:(x[1],x[0]), reverse=True)
+    for i in range(len(applist)):
+        applist[i] = applist[i][0]
     return applist
 
 
@@ -276,3 +312,5 @@ deleteUserAccount(uid,"0800000123")
 resetAI("user_data")
 resetAI("flist_conn_data")
 """
+l = searchByTag(["RPG", "Action"])
+print(l)
