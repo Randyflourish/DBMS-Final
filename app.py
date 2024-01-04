@@ -40,5 +40,5 @@ def search():
 if __name__ == "__main__":
     # to test on your own pc, change the host to
     # "localhost"
-    app.run(debug = True, host = "140.113.89.236", port = 5000)
+    app.run(debug = True, host = "140.113.68.114", port = 5000)
 
