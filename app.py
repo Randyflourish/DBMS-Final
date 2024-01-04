@@ -42,7 +42,6 @@ def sign():
         if valid_user(account, password):
             # For a successful login, redirect to home page.
             return redirect(url_for("home", user = account))
-            # return render_template("home.html", user = account)
         else:
             # For a failed login, redirect to the same page, with modify.
             return render_template("sign.html", fail = True)
@@ -51,6 +50,8 @@ def sign():
 @app.route("/home/<user>")
 def home(user):
     return "Hello " + user
+    pass 
+    return render_template("home.html", user = user)
 
 # a temporary function for user validation
 def valid_user(acc, psd):
