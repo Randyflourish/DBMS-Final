@@ -2,17 +2,54 @@
 <html>
     <head>
         <link rel="stylesheet" href="css/index.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="js/index.js"></script>
         <title>Steam Wishlist</title>
     </head>
     <body>
         
         <nav>
-            <a href="#"><img src="icon/list.png" width="40"></a>
+            <div>
+                <a onclick="document.getElementById('login').style.display='block'"><img src="icon/profile.png" width="40"></a>
+                <div id="login" class="modal">
+                <form class="modal-content animate" action="/index.html" method="post">
+                    <div class="imgcontainer">
+                        <span onclick="document.getElementById('login').style.display='none'" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="uname"><b>Username</b></label>
+                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit">Log in</button>
+                    </div>
+                </form>
+                </div>
+                <a onclick="document.getElementById('favorite').style.display='block'"><img src="icon/heart.png" width="40"></a>
+                <div id="favorite" class="modal">
+                    <form class="modal-content animate">
+                    <div class="imgcontainer">
+                        <span onclick="document.getElementById('favorite').style.display='none'" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label style="text-align: center;font-size: 22px;"><b>You have not logged in yet.</b></label>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            
+            <form class="search" action="/search" method="post">
+                    <input type="text" id="search" name="search" class="search_input">&nbsp;
+                    <button type="submit" class="search_button">Search</button>
+            </form>
+            <div>
+                <a href="#"><img src="icon/sort.png" width="40"></a>
+                <a href="#"><img src="icon/search.png" width="40"></a>
+            </div>
         </nav>
-        <div class="search">
-            <input type="text" id="search" name="search">
-            <button type="button">Search</button>
-        </div>
+        
+        
+
         
     </body>
 </html>
