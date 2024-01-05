@@ -37,6 +37,68 @@ def resetAI(tablename):
     mydb.commit()
     mycursor.reset()
 
+#dictionary with a lot of keys
+def appDetailInfo(appid):
+    global mydb, mycursor
+    infodict=dict()
+    if type(appid) != str:
+        appid = str(appid)
+    mytup = (appid, )
+    sql_command = "SELECT * FROM steam_basic_data WHERE appid = %s"
+    mycursor.execute(sql_command, mytup)
+    results = mycursor.fetchall()
+    results = results[0]
+    mycursor.reset()
+    # infodict["id"] = results[0]
+    infodict["name"] = results[1]
+    infodict["date"] = results[2]
+    infodict["developer"] = results[4]
+    infodict["publisher"] = results[5]
+    infodict["platforms"] = results[6].split(";")
+    infodict["age"] = results[7]
+    infodict["categories"] = results[8].split(";")
+    infodict["genres"] = results[9].split(";")
+    infodict["tags"] = results[10].split(";")
+    infodict["achievements"] = results[11]
+    infodict["pratings"] = results[12]
+    # pratio: float, pratiopct: str(percentage)
+    if results[12] + results[13] == 0:
+        infodict["pratio"] = 0
+    else:
+        infodict["pratio"] = results[12] / (results[12]+results[13])
+    infodict["pratiopct"] = str(round(infodict["pratio"], 3)*100)+"%"
+    infodict["avetime"] = results[14]
+    infodict["medtime"] = results[15]
+    infodict["owners"] = results[16]
+    infodict["price"] = results[17]
+    sql_command = "SELECT * FROM steam_requirements_data WHERE appid = %s"
+    mycursor.execute(sql_command, mytup)
+    results = mycursor.fetchall()
+    results = results[0]
+    mycursor.reset()
+    if "windows" in infodict["platforms"]:
+        infodict["pcreq"] = results[1]
+    if "mac" in infodict['platforms']:
+        infodict["macreq"] = results[2]
+    if 'linux' in infodict['platforms']:
+        infodict["linuxreq"] = results[3]
+    sql_command = "SELECT * FROM steam_desc_data WHERE appid = %s"
+    mycursor.execute(sql_command, mytup)
+    results = mycursor.fetchall()
+    results = results[0]
+    mycursor.reset()
+    infodict["about"] = results[2]
+    infodict["desc"] = results[1]
+    sql_command = "SELECT * FROM steam_media_data WHERE appid = %s"
+    mycursor.execute(sql_command, mytup)
+    results = mycursor.fetchall()
+    results = results[0]
+    mycursor.reset()
+    infodict["headimg"] = results[1]
+    infodict["backimg"] = results[3]
+    infodict["screenshots"] = results[2]
+    return infodict
+
 # -1: name has been used, id: new list id
 def createFList(uid, listname):
     global mydb, mycursor
@@ -312,5 +374,5 @@ deleteUserAccount(uid,"0800000123")
 resetAI("user_data")
 resetAI("flist_conn_data")
 """
-l = searchByTag(["RPG", "Action"])
-print(l)
+d = appDetailInfo(3960)
+print(d)
