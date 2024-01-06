@@ -263,7 +263,7 @@ def searchByTags(taglist):
 
 
 """
-testing code
+#testing code
 uid = createUserAccount("A","0800000123")
 lid = createFList(str(uid),"MHY")
 insertAppIntoFList(1610, lid)
