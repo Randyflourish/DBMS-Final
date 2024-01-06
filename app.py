@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, url_for, redirect
 import hashlib
 
 # import database module
-import db
+# import db
 
 # assign "static" as the static folder
 # Note: the path of Dir:static and File:app.py is the same
@@ -35,8 +35,8 @@ def sign():
     
     elif request.method == "POST":
         # for POST request, we should check the user validation
-        account = request.form["account"]
-        password = request.form["passwd"]
+        account = request.form["uname"]
+        password = request.form["psw"]
 
         # This condition should be modified in future.
         if valid_user(account, password):
