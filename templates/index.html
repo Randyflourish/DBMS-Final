@@ -10,9 +10,11 @@
         
         <nav>
             <div>
+                <!-- Login -->
                 <a onclick="document.getElementById('login').style.display='block'">
                     <img src="{{ url_for('static', filename='icon/profile.png') }}" width="40">
                 </a>
+
                 <div id="login" class="modal">
                 <form class="modal-content animate" action="{{ url_for('sign') }}" method="post">
                     <div class="imgcontainer">
@@ -27,6 +29,8 @@
                     </div>
                 </form>
                 </div>
+
+                <!-- Favorite List -->
                 <a onclick="document.getElementById('favorite').style.display='block'">
                     <img src="{{ url_for('static', filename='icon/heart.png') }}" width="40">
                 </a>
@@ -42,18 +46,45 @@
                 </div>
             </div>
             
-	    <form class="search" action="{{ url_for('search') }}" method="post">
-                    <input type="text" id="search" name="search" class="search_input">&nbsp;
-                    <button type="submit" class="search_button">Search</button>
+            <!-- Search Bar -->
+	        <form class="search" action="{{ url_for('search') }}" method="post">
+                <input type="text" id="search" name="search" class="search_input">&nbsp;
+                <button type="submit" class="search_button">Search</button>
             </form>
+
             <div>
-		    <a href="#"><img src="{{ url_for('static', filename='icon/sort.png') }}" width="40"></a>
-                <a href="#"><img src="{{ url_for('static', filename='icon/search.png') }}" width="40"></a>
+                <!-- Sort -->
+                <!-- Use for lobby test -->
+                {% if user != "Unknown" and user != "" %}
+		        <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='icon/list.png') }}" width="40">
+                </a>
+                {% else %}
+                <a href="#">
+                    <img src="{{ url_for('static', filename='icon/sort.png') }}" width="40">
+                </a>
+                {% endif %}
+                <!-- -->
+                <!-- Search -->
+                <a href="#">
+                    <img src="{{ url_for('static', filename='icon/search.png') }}" width="40">
+                </a>
             </div>
         </nav>
-        
-        
-
-        
+        {% if user == "Unknown" %}
+        <div class="test_fail">
+            錯誤的帳號或密碼！！！<br/>
+            Appear whenever a mistake exists in account or password.
+        </div>
+        {% elif user != "" %}
+        <div class="test_success">
+            Login success!! Hello {{ user }} ! Welcome.<br/>
+            Appear only when entering the correct account and password.
+        </div>
+        {% endif%}
+        <div class="test">
+            This is a test context.<br/>
+            Under every cicumstance should you see this.
+        </div>
     </body>
 </html>

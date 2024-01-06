@@ -138,6 +138,34 @@ nav a {
     animation: animatezoom 0.6s
   }
   
+  .test_success {
+    text-align: center;
+    margin: 10px;
+    font-size: large;
+    color: green;
+  }
+
+  .test_fail {
+    text-align: center;
+    margin: 10px;
+    font-size: large;
+    color: red;
+  }
+
+  .test_unknown {
+    text-align: center;
+    margin: 10px;
+    font-size: large;
+    color: blue;
+  }
+
+  .test{
+    text-align: center;
+    margin: 10px;
+    font-size: large;
+    color: black;
+  }
+
   @-webkit-keyframes animatezoom {
     from {-webkit-transform: scale(0)} 
     to {-webkit-transform: scale(1)}
