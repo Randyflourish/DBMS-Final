@@ -398,11 +398,12 @@ def resetUserPassword(uid, originalPass, newPass):
 
 # input should be a list
 # 0: input type not list, list[id] sorted by match tags
-def searchByTag(taglist):
+def searchByTag(taglist, page):
     global mydb, mycursor
     if type(taglist) != list:
         return 0
-    sql_command = "SELECT sb.appid FROM steam_basic_data AS sb WHERE genres LIKE %s OR categories like %s OR steamspy_tags like %s"
+    sql_command = "SELECT sb.appid FROM steam_basic_data AS sb WHERE genres LIKE %s OR categories like %s OR steamspy_tags like %s "
+    sql_command += "LIMIT 25 OFFSET "+str((page-1)*25)
     appdict = dict()
     for tag in taglist:
         mytup = ("%"+tag+"%", "%"+tag+"%", "%"+tag+"%")
@@ -422,7 +423,7 @@ def searchByTag(taglist):
 
 # input should be a list
 # 0: no condiction, list[id] sorted by match tags
-def searchByRange():
+def searchByRange(page):
     global mydb, mycursor, rangedict
     sql_command = "SELECT appid FROM steam_basic_data WHERE "
     condiction = '('
@@ -474,6 +475,7 @@ def searchByRange():
                        +' AND '+str(rangedict["price"][1][rangedict["price"][0][2]])+' ')
     if use == 0:
         return 0
+    sql_command += "LIMIT 25 OFFSET "+str((page-1)*25)
     mycursor.execute(sql_command + condiction)
     results = mycursor.fetchall()
     mycursor.reset()
@@ -484,7 +486,7 @@ def searchByRange():
 
 # input should be a list
 # 0: input type not list, list[id] sorted by match words and accuracy
-def searchByName(wordlist):
+def searchByName(wordlist, page):
     global mydb, mycursor
     if type(wordlist) != list:
         return 0
@@ -501,8 +503,9 @@ def searchByName(wordlist):
                 appdict[id] = 1
             else:
                 appdict[id] += 1
-        sql_command = "SELECT sb.appid FROM steam_basic_data AS sb WHERE sb.name LIKE %s OR sb.name LIKE %s OR sb.name LIKE %s OR sb.name LIKE %s"
+        sql_command = "SELECT sb.appid FROM steam_basic_data AS sb WHERE sb.name LIKE %s OR sb.name LIKE %s OR sb.name LIKE %s OR sb.name LIKE %s "
         mytup = ("% "+word+" %", word+" %", "% "+word, word)
+        sql_command += "LIMIT 25 OFFSET "+str((page-1)*25)
         mycursor.execute(sql_command, mytup)
         results = mycursor.fetchall()
         mycursor.reset()
