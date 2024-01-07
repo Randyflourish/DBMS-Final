@@ -134,18 +134,19 @@ def createFList(uid, listname):
     return id
 
 # 0: no flist, list[name, id]: list of flist
-def showFList(uid):
+def showFList(uid, page):
     global mydb, mycursor
     if type(uid) != str:
         uid = str(uid)
     flistlist = list()
-    mytup = (uid, )
+    mytup = (uid,)
     sql_command = "SELECT COUNT(*) FROM flist_conn_data WHERE userid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     if results[0][0] == 0:
         return 0
-    sql_command = "SELECT listname, listid FROM flist_conn_data WHERE userid = %s"
+    mytup = (uid, )
+    sql_command = "SELECT listname, listid FROM flist_conn_data WHERE userid = %s ORDER BY listname ASC LIMIT 25 OFFSET "+str((page-1)*25)
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     for col in results:
@@ -245,18 +246,21 @@ def insertAppIntoFList(appid, listid):
     return 1
 
 # 0: no app, list[id]: list of app
-def showAppFromFList(listid):
+def showAppFromFList(listid, page):
     global mydb, mycursor
     if type(listid) != str:
         listid = str(listid)
     flistlist = list()
-    mytup = (listid, )
+    mytup = (listid,)
     sql_command = "SELECT COUNT(*) FROM flist_data WHERE listid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     if results[0][0] == 0:
         return 0
-    sql_command = "SELECT appid FROM flist_data WHERE listid = %s"
+    mytup = (listid, )
+    sql_command = "SELECT f.appid FROM flist_data AS f\
+        INNER JOIN (SELECT steam_basic_data.appid, steam_basic_data.name FROM steam_basic_data) AS sb ON sb.appid = f.appid\
+        WHERE f.listid = %s ORDER BY sb.name ASC LIMIT 25 OFFSET "+str((page-1)*25)
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     for col in results:
@@ -521,23 +525,23 @@ resetUserPassword(uid, "0800000123", "1911111234")
 lid = createFList(str(uid),"MiHoYo")
 insertAppIntoFList(1610, lid)
 insertAppIntoFList(1670, lid)
-flist = showFList(uid)
+flist = showFList(uid, 1)
 print(flist)
-flist = showAppFromFList(lid)
+flist = showAppFromFList(lid, 1)
 print(flist)
 renameFList(uid, lid, "HoYoVerse")
-flist = showFList(uid)
+flist = showFList(uid, 1)
 print(flist)
-flist = showAppFromFList(lid)
+flist = showAppFromFList(lid, 1)
 print(flist)
 lid = createFList(str(uid),"MiHoYo")
 insertAppIntoFList(1610, lid)
-flist = showAppFromFList(lid)
+flist = showAppFromFList(lid, 1)
 print(flist)
 mergeFList(uid, lid, 1)
-flist = showFList(uid)
+flist = showFList(uid, 1)
 print(flist)
-flist = showAppFromFList(lid)
+flist = showAppFromFList(lid, 1)
 print(flist)
 deleteUserAccount(uid,"1911111234")
 resetAI("user_data")
