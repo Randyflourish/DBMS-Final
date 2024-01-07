@@ -28,7 +28,7 @@ rangedict = {
     "platform":[[1, 1, 1],["windows", "mac", "linux"]]
 }
 
-
+"""
 def funList():
     global mydb, mycursor
     taglist = list()
@@ -39,7 +39,7 @@ def funList():
     for col in results:
         taglist.append(col[0])
     return taglist
-
+"""
 
 def resetAI(tablename):
     global mydb, mycursor
@@ -110,7 +110,7 @@ def appDetailInfo(appid):
     infodict["screenshots"] = results[2]
     return infodict
 
-# -1: name has been used, id: new list id
+# 0: name has been used, id: new list id
 def createFList(uid, listname):
     global mydb, mycursor
     if type(uid) != str:
@@ -120,8 +120,8 @@ def createFList(uid, listname):
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     mycursor.reset()
-    if int(results[0][0]) != 0:
-        return -1
+    if results[0][0] != 0:
+        return 0
     sql_command = "INSERT INTO flist_conn_data (listname, userid) VALUES (%s, %s)"
     mycursor.execute(sql_command, mytup)
     mydb.commit()
@@ -130,10 +130,10 @@ def createFList(uid, listname):
     mycursor.execute(sql_command)
     results = mycursor.fetchall()
     mycursor.reset()
-    id = int(results[0][0])
+    id = results[0][0]
     return id
 
-# -1: no flist, list[name, id]: list of flist
+# 0: no flist, list[name, id]: list of flist
 def showFList(uid):
     global mydb, mycursor
     if type(uid) != str:
@@ -143,14 +143,47 @@ def showFList(uid):
     sql_command = "SELECT COUNT(*) FROM flist_conn_data WHERE userid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
-    if int(results[0][0]) == 0:
-        return -1
+    if results[0][0] == 0:
+        return 0
     sql_command = "SELECT listname, listid FROM flist_conn_data WHERE userid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     for col in results:
-        flistlist.append([str(col[0]), int(col[1])])
+        flistlist.append([col[0], col[1]])
     return flistlist
+
+# 0: newname exist, 1: success
+def renameFList(uid, listid, newname):
+    global mydb, mycursor
+    if type(listid) != str:
+        listid = str(listid)
+    sql_command = "SELECT count(*) FROM flist_conn_data WHERE listname = %s AND userid = %s"
+    mytup = (newname, uid)
+    mycursor.execute(sql_command, mytup)
+    results = mycursor.fetchall()
+    if results[0][0] > 0:
+        return 0
+    sql_command = "UPDATE flist_conn_data SET listname = %s WHERE listid = %s"
+    mytup = (newname, listid)
+    mycursor.execute(sql_command, mytup)
+    mydb.commit()
+    mycursor.reset()
+    return 1
+
+def mergeFList(uid, mainlistid, mergedlistid):
+    global mydb, mycursor
+    if type(uid) != str:
+        uid = str(uid)
+    if type(mainlistid) != str:
+        mainlistid = str(mainlistid)
+    if type(mergedlistid) != str:
+        mergedlistid = str(mergedlistid)
+    mytup = (mainlistid, mergedlistid)
+    sql_command = "UPDATE flist_data SET listid = %s WHERE listid = %s"
+    mycursor.execute(sql_command, mytup)
+    mycursor.reset()
+    mydb.commit()
+    deleteFList(mergedlistid)
 
 def deleteFList(listid):
     global mydb, mycursor
@@ -175,7 +208,7 @@ def deleteUserFLists(uid):
     mycursor.reset()
     for col in results:
         try:
-            lid = int(col[0])
+            lid = col[0]
             mytup = (lid, )
             sql_command = "DELETE FROM flist_data WHERE listid = %s"
             mycursor.execute(sql_command, mytup)
@@ -200,7 +233,7 @@ def insertAppIntoFList(appid, listid):
     sql_command = "SELECT COUNT(*) FROM flist_data WHERE listid = %s AND appid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
-    cnt = int(results[0][0])
+    cnt = results[0][0]
     if cnt != 0:
         return 0
     sql_command = "INSERT INTO flist_data VALUES (%s, %s)"
@@ -219,13 +252,13 @@ def showAppFromFList(listid):
     sql_command = "SELECT COUNT(*) FROM flist_data WHERE listid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
-    if int(results[0][0]) == 0:
+    if results[0][0] == 0:
         return -1
-    sql_command = "SELECT f.appid FROM flist_data AS f WHERE listid = %s"
+    sql_command = "SELECT appid FROM flist_data WHERE listid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     for col in results:
-        flistlist.append([str(col[0]), int(col[1])])
+        flistlist.append(col[0])
     return flistlist
 
 # 0: not in this flist, 1: success
@@ -239,7 +272,7 @@ def deleteAppFromFList(appid, listid):
     sql_command = "SELECT COUNT(*) FROM flist_data WHERE listid = %s AND appid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
-    cnt = int(results[0][0])
+    cnt = results[0][0]
     if cnt != 0:
         return 0
     sql_command = "DELETE FROM flist_data WHERE listid = %s AND appid = %s"
@@ -256,7 +289,7 @@ def createUserAccount(userName, userPass):
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     mycursor.reset()
-    cnt = int(results[0][0])
+    cnt = results[0][0]
     if cnt != 0:
         return -1
     mytup = (userName, userPass)
@@ -268,7 +301,7 @@ def createUserAccount(userName, userPass):
     mycursor.execute(sql_command)
     results = mycursor.fetchall()
     mycursor.reset()
-    id = int(results[0][0])
+    id = results[0][0]
     return id
 
 # -1: account does not exist, 0: password fail, 1: success
@@ -282,7 +315,7 @@ def deleteUserAccount(uid, userPass):
     results = mycursor.fetchall()
     mycursor.reset()
     try:
-        password = str(results[0][2])
+        password = results[0][2]
     except:
         return -1
     if userPass != password:
@@ -304,8 +337,8 @@ def login(userName, userPass):
     results = mycursor.fetchall()
     mycursor.reset()
     try:
-        id = int(results[0][0])
-        password = str(results[0][2])
+        id = results[0][0]
+        password = results[0][2]
     except:
         return -1
     if userPass != password:
@@ -336,6 +369,8 @@ def searchByTag(taglist):
         applist[i] = applist[i][0]
     return applist
 
+# input should be a list
+# -1: no condiction, list[id] sorted by match tags
 def searchByRange():
     global mydb, mycursor, rangedict
     sql_command = "SELECT appid FROM steam_basic_data WHERE "
@@ -386,6 +421,8 @@ def searchByRange():
         use += 1
         condiction += ('price between '+str(rangedict["price"][1][rangedict["price"][0][1]])\
                        +' AND '+str(rangedict["price"][1][rangedict["price"][0][2]])+' ')
+    if use == 0:
+        return -1
     mycursor.execute(sql_command + condiction)
     results = mycursor.fetchall()
     mycursor.reset()
@@ -429,10 +466,25 @@ def searchByName(wordlist):
 
 """
 #testing code
+
 uid = createUserAccount("A","0800000123")
-lid = createFList(str(uid),"MHY")
+lid = createFList(str(uid),"MiHoYo")
 insertAppIntoFList(1610, lid)
 insertAppIntoFList(1670, lid)
+flist = showFList(uid)
+print(flist)
+flist = showAppFromFList(lid)
+print(flist)
+renameFList(uid, lid, "HoYoVerse")
+flist = showFList(uid)
+print(flist)
+flist = showAppFromFList(lid)
+print(flist)
+lid = createFList(str(uid),"MiHoYo")
+insertAppIntoFList(10, lid)
+flist = showAppFromFList(lid)
+print(flist)
+mergeFList(uid, lid, 1)
 flist = showFList(uid)
 print(flist)
 flist = showAppFromFList(lid)
