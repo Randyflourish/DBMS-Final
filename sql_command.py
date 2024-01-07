@@ -40,7 +40,7 @@ def funList():
         taglist.append(col[0])
     return taglist
 """
-
+# reset auto increment of table: should not called in app
 def resetAI(tablename):
     global mydb, mycursor
     sql_command = "ALTER TABLE "+tablename+" AUTO_INCREMENT = 1"
@@ -347,11 +347,18 @@ def login(userName, userPass):
         return 0
     return id
 
-# 0: newname has been used, 1: success
-def renameAccount(uid, newname):
+# -1: account has been exist, 0: password fail, 1: success
+def renameUserAccount(uid, userPass, newname):
     global mycursor, mydb
     if type(uid) != str:
         uid = str(uid)
+    mytup = (uid, )
+    sql_command = "SELECT userpassword FROM user_data WHERE userid = %s"
+    mycursor.execute(sql_command, mytup)
+    results = mycursor.fetchall()
+    mycursor.reset()
+    if userPass != results[0][0]:
+        return 0
     mytup = (newname, )
     sql_command = "SELECT count(*) FROM user_data WHERE username = %s"
     mycursor.execute(sql_command, mytup)
@@ -361,6 +368,25 @@ def renameAccount(uid, newname):
         return 0
     mytup = (newname, uid)
     sql_command = "UPDATE user_data SET username = %s WHERE userid = %s"
+    mycursor.execute(sql_command, mytup)
+    mydb.commit()
+    mycursor.reset()
+    return 1
+
+# 0: password fail, 1: success
+def resetUserPassword(uid, originalPass, newPass):
+    global mycursor, mydb
+    if type(uid) != str:
+        uid = str(uid)
+    mytup = (uid, )
+    sql_command = "SELECT userpassword FROM user_data WHERE userid = %s"
+    mycursor.execute(sql_command, mytup)
+    results = mycursor.fetchall()
+    mycursor.reset()
+    if originalPass != results[0][0]:
+        return 0
+    mytup = (newPass, uid)
+    sql_command = "UPDATE user_data SET userpassword = %s WHERE userid = %s"
     mycursor.execute(sql_command, mytup)
     mydb.commit()
     mycursor.reset()
@@ -490,7 +516,8 @@ def searchByName(wordlist):
 #testing code
 
 uid = createUserAccount("A","0800000123")
-renameAccount(uid, "B")
+renameUserAccount(uid, "0800000123", "B")
+resetUserPassword(uid, "0800000123", "1911111234")
 lid = createFList(str(uid),"MiHoYo")
 insertAppIntoFList(1610, lid)
 insertAppIntoFList(1670, lid)
@@ -512,7 +539,7 @@ flist = showFList(uid)
 print(flist)
 flist = showAppFromFList(lid)
 print(flist)
-deleteUserAccount(uid,"0800000123")
+deleteUserAccount(uid,"1911111234")
 resetAI("user_data")
 resetAI("flist_conn_data")
 """
