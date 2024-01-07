@@ -178,8 +178,10 @@ def mergeFList(uid, mainlistid, mergedlistid):
         mainlistid = str(mainlistid)
     if type(mergedlistid) != str:
         mergedlistid = str(mergedlistid)
-    mytup = (mainlistid, mergedlistid)
-    sql_command = "UPDATE flist_data SET listid = %s WHERE listid = %s"
+    mytup = (mainlistid, mainlistid, mergedlistid)
+    sql_command = "UPDATE flist_data AS t1\
+        LEFT JOIN (SELECT * FROM flist_data WHERE listid = %s) AS t2 ON t1.appid = t2.appid \
+        SET t1.listid = %s WHERE t1.listid = %s AND t2.listid IS NULL"
     mycursor.execute(sql_command, mytup)
     mycursor.reset()
     mydb.commit()
@@ -463,6 +465,31 @@ def searchByName(wordlist):
         applist[i] = applist[i][0]
     return applist
 
+uid = createUserAccount("A","0800000123")
+lid = createFList(str(uid),"MiHoYo")
+insertAppIntoFList(1610, lid)
+insertAppIntoFList(1670, lid)
+flist = showFList(uid)
+print(flist)
+flist = showAppFromFList(lid)
+print(flist)
+renameFList(uid, lid, "HoYoVerse")
+flist = showFList(uid)
+print(flist)
+flist = showAppFromFList(lid)
+print(flist)
+lid = createFList(str(uid),"MiHoYo")
+insertAppIntoFList(1610, lid)
+flist = showAppFromFList(lid)
+print(flist)
+mergeFList(uid, lid, 1)
+flist = showFList(uid)
+print(flist)
+flist = showAppFromFList(lid)
+print(flist)
+deleteUserAccount(1,"0800000123")
+resetAI("user_data")
+resetAI("flist_conn_data")
 
 """
 #testing code
@@ -481,7 +508,7 @@ print(flist)
 flist = showAppFromFList(lid)
 print(flist)
 lid = createFList(str(uid),"MiHoYo")
-insertAppIntoFList(10, lid)
+insertAppIntoFList(1610, lid)
 flist = showAppFromFList(lid)
 print(flist)
 mergeFList(uid, lid, 1)
