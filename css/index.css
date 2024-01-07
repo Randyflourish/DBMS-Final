@@ -1,3 +1,6 @@
+html,body,header{
+  height: 100%;
+}
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -7,28 +10,30 @@ body {
 header {
     background-color: #333;
     color: white;
-    padding: 10px;
     text-align: center;
 }
 
 nav {
     background-color: #9d9696;
-    padding: 10px;
+    padding: 0.5%;
     font-family: Microsoft JhengHei;
     text-align: center;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 5%;;
 }
 
 nav a {
     color: white;
     text-decoration: none;
-    margin: 0 10px;
+    margin: 0% 10px;
     cursor: pointer;
 }
 
-
+img{
+  width: 40px;
+}
 
 .search {
     display: flex;
@@ -41,7 +46,6 @@ nav a {
     font-size: large;
     border-radius: 5px;
     border-color:gray;
-    font-family: Microsoft JhengHei;
 }
 
 .search_button {
@@ -52,11 +56,10 @@ nav a {
     cursor: pointer;
     border-radius: 4px;
     font-size: 18px;
-    font-family: Microsoft JhengHei;
 }
 
 .search_button:hover {
-    background-color: #45a049;
+    opacity: 0.8;
 }
 
 .login_input[type=text], input[type=password] {
@@ -84,14 +87,14 @@ nav a {
     opacity: 0.8;
 }
 
-.imgcontainer {
-    margin: 5% 10%;
+.titlecontainer {
+    margin: 1px 10%;
     display: flex;
     justify-content: space-between;
 }
 
 .container {
-    padding: 10%;
+    padding: 0% 10% 10% 10%;
     text-align: left;
 }
   
@@ -148,3 +151,116 @@ nav a {
     from {transform: scale(0)} 
     to {transform: scale(1)}
   }
+
+  .radio-item [type="radio"] {
+    display: none;
+  }
+
+  .radio-item + .radio-item {
+    margin-top: 3px;
+  }
+
+  .radio-item label {
+    color: white;
+    display: block;
+    padding: 10px 130px 10px 40px;
+    background: #04AA6D;
+    border: 2px solid;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 400;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .radio-item label:after,
+  .radio-item label:before {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+  }
+  
+  .radio-item label:after {
+    height: 15px;
+    width: 15px;
+    border: 2px solid gray;
+    left: 10px;
+    top: calc(50% - 10px);
+  }
+  .radio-item label:before {
+    background: gray;
+    height: 16px;
+    width: 16px;
+    left: 12px;
+    top: calc(50% - 8px);
+    transform: scale(4);
+    opacity: 0;
+    visibility: hidden;
+
+  }
+  .radio-item [type="radio"]:checked ~ label {
+    border-color: gray;
+  }
+  .radio-item [type="radio"]:checked ~ label::before {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+
+  .gamelist{
+    border: 2px solid;
+    height: 75%;
+    border-radius: 15px;
+  }
+
+  .turnpage{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    padding: 1%;
+  }
+
+  .page-button{
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 20px;
+  }
+
+  .page-button:hover {
+    opacity: 0.8;
+}
+
+.gamelist{
+  margin: 0.5%;
+  height: 80%;
+  border-radius: 15px;
+  border: 2px solid;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  border: 2px solid;
+  overflow: hidden;
+}
+
+td {
+  border: 1px solid black;
+  text-align: center;
+  background-color: #ddd;
+}
+
+th {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+  height: 5%;
+  font-size: 120%;
+}

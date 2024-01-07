@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/game.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="js/index.js"></script>
+        <title>Steam Wishlist</title>
+    </head>
+    <body>
+        
+        <nav>
+            <div>
+                <a onclick="ShowBlock('login')"><img src="icon/profile.png"></a>
+                <div id="login" class="modal">
+                <form class="modal-content animate" action="/index.html" method="post">
+                    <div class="titlecontainer">
+                        <h1>Log In</h1>
+                        <span onclick="CloseBlock('login')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="uname"><b>Username</b></label>
+                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit">Log In</button>
+                        <button class="login_button" type="button" onclick="CloseBlock('login');ShowBlock('signup')">Sign Up</button>
+                    </div>
+                </form>
+                </div>
+                <div id="signup" class="modal">
+                    <form class="modal-content animate" action="/index.html" method="post">
+                        <div class="titlecontainer">
+                            <h1>Sign Up</h1>
+                            <span onclick="CloseBlock('signup')" class="close" title="Close">&times;</span>
+                        </div>
+                        <div class="container">
+                            <label for="uname"><b>Username</b></label>
+                            <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                            <label for="psw"><b>Password</b></label>
+                            <input type="password" placeholder="Enter Password" name="psw" required>
+                            <button class="login_button" type="submit">Sign up</button>
+                        </div>
+                    </form>
+                </div>
+                <a onclick="ShowBlock('favorite')"><img src="icon/heart.png"></a>
+                <div id="favorite" class="modal">
+                    <form class="modal-content animate">
+                    <div class="titlecontainer">
+                        <h1>Alert</h1>
+                        <span onclick="CloseBlock('favorite')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label style="text-align: center;font-size: 22px;"><b>You have not logged in yet.</b></label>
+                    </div>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <a href="#"><img src="icon/add.png"></a>
+                <a href="index.html"><img src="icon/home.png"></a>
+            </div>
+        </nav>
+        <br>
+        <div class="wishlist">
+            <table>
+                <tr>
+                    <th colspan="2" rowspan="4">圖片</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Categories</th>
+                    <th>Generes</th>
+                    <th>Tages</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    
+                    <th>好評數</th>
+                    <th>好評率</th>
+                    <th>持有人數</th>
+                    <th>平均遊玩時間</th>
+                    <th>中位遊玩時間</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th colspan="2">支援系統平台與最低配置</th>
+                    <th>發布日期</th>
+                    <th>開發商</th>
+                    <th>出版商</th>
+                    <th>好評率</th>
+                    <th>詳細介紹</th>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+        
+
+        
+    </body>
+</html>
