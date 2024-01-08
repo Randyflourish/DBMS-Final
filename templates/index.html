@@ -113,19 +113,9 @@
                 </form>
             </div>
             {% elif user_id[0] != '-' %}
-            <a onclick="ShowBlock('favorite')"><img src="{{ url_for('static', filename='icon/heart.png') }}"></a>
-            <div id="favorite" class="modal">
-                <form class="modal-content animate">
-                    <div class="titlecontainer">
-                        <h1>Alert</h1>
-                        <span onclick="CloseBlock('favorite')" class="close" title="Close">&times;</span>
-                    </div>
-                    <div class="container">
-                        <label style="text-align: center;font-size: 22px;"><b>You have not logged in
-                                yet.</b></label>
-                    </div>
-                </form>
-            </div>
+            <a href="{{ url_for('favorite', user_id = user_id, page = 1) }}">
+                <img src="{{ url_for('static', filename='icon/heart.png') }}">
+            </a>
             {% endif %}
         </div>
 

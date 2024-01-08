@@ -696,7 +696,7 @@ def searchByName(wordlist: list) -> list:
     return finallist
 
 def takePage(p: int, mylist: list) -> list:
-    limitpage = (len(mylist)+9) % 10
+    limitpage = int((len(mylist)+9) / 10)
     if p > limitpage:
         p = limitpage
     elif p < 1:

@@ -187,11 +187,50 @@ def addGame():
         if searchWay == "Name":
             return redirect(url_for("searchName", user_id = int(user_id), page = int(page), search = keyword, addResult = 1))
 
+@app.route("/deleteGame", methods = ["POST"])
+def deleteGame():
+    user_id = request.args.get("user_id")
+    game_id = request.args.get("game_id")
+
+    result = sql_command.deleteAppFromFList(str(user_id), str(game_id))
+    return redirect(url_for("favorite", user_id = int(user_id), page = 1, deleteResult = result))
+
+
+# end of adding or deleting games
+################################################################################
+################################################################################
+# handling routing of favotite list
+
+@app.route("/favorite/<user_id>", methods = ["GET", "POST"])
+def favorite(user_id = 0):
+
+    favoriteList = None
+    if request.method == "POST":
+        sort_cond = request.form["condition"]
+        order = request.form["order"]
+        order_bool = True
+        if order == "Order":
+            order_bool = True
+        else:
+            order_bool = False
+        sql_command.modifySorting(sort_cond, order_bool)
+        
+    favoriteResult = sql_command.showAppFromFList(str(user_id))
+    page = int(request.args.get("page"))
+    if page <= 0:
+        page = 1
+    elif page*10 - len(favoriteResult) >= 10:
+        page -= 1
+    favoriteList = sql_command.takePage(page, favoriteResult)
+    favoritePage = sql_command.appShortInfo(favoriteList)
+    
+    deleteResult = request.args.get("deleteResult")
+    return render_template("wishlist.html", user_id = user_id, wishlist = favoritePage, deleteResult = deleteResult)
 
 
 
-
-
+# end of handling routing of favorite list
+################################################################################
 
 if __name__ == "__main__":
     # to test on your own pc, change the host to
