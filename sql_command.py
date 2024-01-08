@@ -80,6 +80,7 @@ def appDetailInfo(appid):
     infodict["tags"] = results[10].split(";")
     infodict["achievements"] = results[11]
     infodict["pratings"] = results[12]
+    infodict["nratings"] = results[13]
     # pratio: float, pratiopct: str(percentage)
     if results[12] + results[13] == 0:
         infodict["pratio"] = 0
@@ -137,6 +138,7 @@ def appShortInfo(appidlist):
         infodict["date"] = results[2]
         # infodict["age"] = results[7]
         infodict["pratings"] = results[12]
+        infodict["nratings"] = results[13]
         # pratio: float, pratiopct: str(percentage)
         if results[12] + results[13] == 0:
             infodict["pratio"] = 0
