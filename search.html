@@ -42,17 +42,7 @@
                         </div>
                     </form>
                 </div>
-            </div>
-            <form class="search" action="/search" method="post">
-                    <input type="text" id="search" name="search" class="search_input">&nbsp;
-                    <button type="submit" class="search_button">Search</button>
-            </form>
-            <div>
-                <a href="index.html"><img src="icon/home.png"></a>
-            </div>
-        </nav>
-        <nav>
-            <a onclick="ShowBlock('favorite')"><img src="icon/heart.png"></a>
+                <a onclick="ShowBlock('favorite')"><img src="icon/heart.png"></a>
                 <div id="favorite" class="modal">
                     <form class="modal-content animate">
                     <div class="titlecontainer">
@@ -64,7 +54,16 @@
                     </div>
                     </form>
                 </div>
-            <a href="#"><img src="icon/search.png"></a>
+            </div>
+            
+            <form class="search" action="/search" method="post">
+                    <input type="text" id="search" name="search" class="search_input">&nbsp;
+                    <button type="submit" class="search_button">Search</button>
+            </form>
+            <div>
+                <a href="#"><img src="icon/search.png"></a>
+                <a href="index.html"><img src="icon/home.png"></a>
+            </div>
         </nav>
         <br>
         <div class="gamelist">
