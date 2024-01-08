@@ -71,7 +71,7 @@ img{
     box-sizing: border-box;
     font-size: large;
 }
-  /* Set a style for all buttons */
+
 .login_button {
     background-color: #04AA6D;
     color: white;
@@ -98,141 +98,136 @@ img{
     text-align: left;
 }
   
-  
-  /* The Modal (background) */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
     padding-top: 60px;
 }
   
-  /* Modal Content/Box */
-  .modal-content {
-    background-color: #fefefe;
-    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-    border: 1px solid #888;
-    width: 20%; /* Could be more or less, depending on screen size */
-    height: auto;
-  }
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto;
+  border: 1px solid #888;
+  width: 20%;
+  height: auto;
+}
   
-  /* The Close Button (x) */
-  .close {
-    color: #000;
-    font-size: 35px;
-    font-weight: bold;
-  }
+
+.close {
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
   
-  .close:hover,
-  .close:focus {
-    color: red;
-    cursor: pointer;
-  }
+.close:hover,.close:focus {
+  color: red;
+  cursor: pointer;
+}
   
-  /* Add Zoom Animation */
-  .animate {
-    -webkit-animation: animatezoom 0.6s;
-    animation: animatezoom 0.6s
-  }
+.animate {
+  -webkit-animation: animatezoom 0.6s;
+  animation: animatezoom 0.6s
+}
   
-  @-webkit-keyframes animatezoom {
-    from {-webkit-transform: scale(0)} 
-    to {-webkit-transform: scale(1)}
-  }
-    
-  @keyframes animatezoom {
-    from {transform: scale(0)} 
-    to {transform: scale(1)}
-  }
-
-  .radio-item [type="radio"] {
-    display: none;
-  }
-
-  .radio-item + .radio-item {
-    margin-top: 3px;
-  }
-
-  .radio-item label {
-    color: white;
-    display: block;
-    padding: 10px 130px 10px 40px;
-    background: #04AA6D;
-    border: 2px solid;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: 400;
-    white-space: nowrap;
-    position: relative;
-  }
-
-  .radio-item label:after,
-  .radio-item label:before {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-  }
+@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)} 
+  to {-webkit-transform: scale(1)}
+}
   
-  .radio-item label:after {
-    height: 15px;
-    width: 15px;
-    border: 2px solid gray;
-    left: 10px;
-    top: calc(50% - 10px);
-  }
-  .radio-item label:before {
-    background: gray;
-    height: 16px;
-    width: 16px;
-    left: 12px;
-    top: calc(50% - 8px);
-    transform: scale(4);
-    opacity: 0;
-    visibility: hidden;
+@keyframes animatezoom {
+  from {transform: scale(0)} 
+  to {transform: scale(1)}
+}
 
-  }
-  .radio-item [type="radio"]:checked ~ label {
-    border-color: gray;
-  }
-  .radio-item [type="radio"]:checked ~ label::before {
-    opacity: 1;
-    visibility: visible;
-    transform: scale(1);
-  }
+.radio-item [type="radio"] {
+  display: none;
+}
 
-  .gamelist{
-    border: 2px solid;
-    height: 75%;
-    border-radius: 15px;
-  }
+.radio-item + .radio-item {
+  margin-top: 3px;
+}
 
-  .turnpage{
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    padding: 1%;
-  }
+.radio-item label {
+  color: white;
+  display: block;
+  padding: 10px 50px 10px 50px;
+  background: #04AA6D;
+  border: 2px solid;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 400;
+  white-space: nowrap;
+  position: relative;
+}
 
-  .page-button{
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 20px;
-  }
+.radio-item label:after,.radio-item label:before {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+}
+  
+.radio-item label:after {
+  height: 15px;
+  width: 15px;
+  border: 2px solid gray;
+  left: 10px;
+  top: calc(50% - 10px);
+}
 
-  .page-button:hover {
-    opacity: 0.8;
+.radio-item label:before {
+  background: gray;
+  height: 16px;
+  width: 16px;
+  left: 12px;
+  top: calc(50% - 8px);
+  transform: scale(4);
+  opacity: 0;
+  visibility: hidden;
+
+}
+.radio-item [type="radio"]:checked ~ label {
+  border-color: gray;
+}
+.radio-item [type="radio"]:checked ~ label::before {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.gamelist{
+  border: 2px solid;
+  height: 75%;
+  border-radius: 15px;
+}
+
+.turnpage{
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  padding: 1%;
+}
+
+.page-button{
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 20px;
+}
+
+.page-button:hover {
+  opacity: 0.8;
 }
 
 .gamelist{
@@ -263,4 +258,20 @@ th {
   text-align: center;
   height: 5%;
   font-size: 120%;
+}
+
+.wishlist_button {
+  background-color: #04AA6D;
+  color: white;
+  padding: 1px;
+  font-size:medium;
+  border: none;
+  cursor: pointer;
+  width: 50%;
+  height: 30px;
+  border-radius: 15px;
+}
+
+.wishlist_button:hover{
+  opacity: 0.7;
 }
