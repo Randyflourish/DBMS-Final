@@ -51,6 +51,7 @@
                         <h1>User：</h1>
                         <button class="login_button" type="button" onclick="ShowBlock('changeinformation');CloseBlock('selection')">Change account information</button>
                         <button class="login_button" type="button" onclick="ShowBlock('deleteaccount');CloseBlock('selection')">Delete account</button>
+                        <button class="login_button" type="submit" onclick="CloseBlock('selection')">Log out</button>
                     </div>
                     </div>
                 </div> 
@@ -129,6 +130,10 @@
                         <div class="radio-item">
                             <input class="login_input" type="radio" id="owners" name="condition">
                             <label for="owners"><b>Owners</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="Price" name="condition">
+                            <label for="Price"><b>Price</b></label>
                         </div>
                         <h3>Order</h3>
                         <div class="radio-item">
