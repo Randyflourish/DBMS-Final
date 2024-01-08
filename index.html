@@ -42,6 +42,46 @@
                         </div>
                     </form>
                 </div>
+                <div id="selection" class="modal">
+                    <div class="modal-content animate">
+                    <div class="titlecontainer">
+                        <span onclick="CloseBlock('selection')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <h1>User：</h1>
+                        <button class="login_button" type="button" onclick="ShowBlock('changeinformation');CloseBlock('selection')">Change account information</button>
+                        <button class="login_button" type="button" onclick="ShowBlock('deleteaccount');CloseBlock('selection')">Delete account</button>
+                    </div>
+                    </div>
+                </div> 
+                <div id="changeinformation" class="modal">
+                    <form class="modal-content animate" action="/index.html" method="post">
+                        <div class="titlecontainer">
+                            <h1>Change information</h1>
+                            <span onclick="CloseBlock('changeinformation')" class="close" title="Close">&times;</span>
+                        </div>
+                        <div class="container">
+                            <label for="uname"><b>Username</b></label>
+                            <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                            <label for="psw"><b>Password</b></label>
+                            <input type="password" placeholder="Enter Password" name="psw" required>
+                            <button class="login_button" type="submit">Change</button>
+                        </div>
+                    </form>
+                </div>
+                <div id="deleteaccount" class="modal">
+                    <form class="modal-content animate" action="/index.html" method="post">
+                        <div class="titlecontainer">
+                            <h1>Change information</h1>
+                            <span onclick="CloseBlock('deleteaccount')" class="close" title="Close">&times;</span>
+                        </div>
+                        <div class="container">
+                            <label for="psw"><b>Password</b></label>
+                            <input type="password" placeholder="Enter Password" name="psw" required>
+                            <button class="login_button" type="submit" style="background-color: red;">Delete Account</button>
+                        </div>
+                    </form>
+                </div>
                 <a onclick="ShowBlock('favorite')"><img src="icon/heart.png"></a>
                 <div id="favorite" class="modal">
                     <form class="modal-content animate">
