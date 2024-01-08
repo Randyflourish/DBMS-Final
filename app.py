@@ -111,25 +111,38 @@ def logout():
 ##################################################################
 # handling search
 
-searchResult = None
-
 # handling searching
-@app.route("/searchName/<user_id>", methods = ["POST"])
+@app.route("/searchName/<user_id>/<page>", methods = ["POST"])
 def searchName(page = 1, user_id = 0):
-    if page == 1:
+    
+    keyword = ""
+    try:
         keyword = request.form["search"]
-        keywords_list = keyword[1:-1].replace("'", "").split(", ")
-        global searchResult
-        searchResult = sql_command.searchByName(keywords_list)
+    except:
+        keyword = request.args.get("search")
+    print(keyword)
+    keywords_list = keyword[1:-1].replace("'", "").split(", ")
+    
+    searchResult = sql_command.searchByName(keywords_list)
+    
+    page = int(page)
+    if page <= 0:
+        page = 1
+    elif page*10 - len(searchResult) >= 10:
+        page -= 1
 
-    searchPage = sql_command.takePage(page, searchResult)
+    searchList = sql_command.takePage(int(page), searchResult)
+    searchPage = sql_command.appShortInfo(searchList)
+    
     # just doing the handover
-    return render_template("index.html", user_id = user_id, result = searchPage)
+    return render_template(
+        "result.html", user_id = user_id, result = searchPage,
+          searchWay = "Name", page = int(page), keyword = keyword)
 
 @app.route("/searchTag/<user_id>", methods = ["POST"])
 def searchTag(page = 1, user_id = 0):
     searchPage = None
-    return render_template("index.html", user_id = user_id, result = searchPage)
+    return render_template("result.html", user_id = user_id, result = searchPage)
 
 # end of handling search
 #####################################################################

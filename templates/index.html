@@ -113,7 +113,7 @@
             </div>
         </div>
 
-        <form class="search" action="{{ url_for('searchName', user_id = user_id) }}" method="post">
+        <form class="search" action="{{ url_for('searchName', user_id = user_id, page = 1) }}" method="post">
             <input type="text" id="search" name="search" class="search_input">&nbsp;
             <button type="submit" class="search_button">Search</button>
         </form>
@@ -166,115 +166,50 @@
                     </div>
                 </form>
             </div>
-            <a href="{{ url_for('searchTag', user_id = user_id) }}"><img
+            <a href="{{ url_for('searchTag', user_id = user_id, page = 1) }}"><img
                     src="{{ url_for('static', filename='icon/search.png') }}"></a>
         </div>
     </nav>
     <br>
-    {% if user_id == 0 or user_id == "0" %}
-    <h1>
-        Not login yet.
-    </h1>
-    {% elif user_id == "-1" %}
-    <h1>
-        Incorrect User Data
-    </h1>
-    {% elif user_id == "-2" %}
-    <h1>
-        User account has been used.
-    </h1>
-    {% elif user_id == "-3" %}
-    <h1>
-        Change account success.
-        <a href="{{ url_for('index') }}">
-            Click here return to home page.
-        </a>
-    </h1>
-    {% elif user_id == "-4" %}
-    <h1>
-        Change account failed.</h1>
-    </h1>
-    {% elif user_id == "-5" %}
-    <h1>
-        Delete account success.
-    </h1>
-    {% elif user_id == "-6" %}
-    <h1>
-        Delete account failed.
-    </h1>
+    <div style="text-align: center;">
+            {% if user_id == 0 or user_id == "0" %}
+        <h1>
+            Not login yet.
+        </h1>
+        {% elif user_id == "-1" %}
+        <h1>
+            Incorrect User Data
+        </h1>
+        {% elif user_id == "-2" %}
+        <h1>
+            User account has been used.
+        </h1>
+        {% elif user_id == "-3" %}
+        <h1>
+            Change account success.
+            <a href="{{ url_for('index') }}">
+                Click here return to home page.
+            </a>
+        </h1>
+        {% elif user_id == "-4" %}
+        <h1>
+            Change account failed.</h1>
+        </h1>
+        {% elif user_id == "-5" %}
+        <h1>
+            Delete account success.
+        </h1>
+        {% elif user_id == "-6" %}
+        <h1>
+            Delete account failed.
+        </h1>
 
-    {% elif user_id[0] != '-' %}
-    <h1>
-        Hello {{ user_id }}
-    </h1>
-    {% endif %}
-    {{ result }}
-    <div class="gamelist">
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Date</th>
-                <th>好評率</th>
-                <th>好評數</th>
-                <th>遊玩人數</th>
-                <th>新增至願望清單</th>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-        </table>
+        {% elif user_id[0] != '-' %}
+        <h1>
+            Hello {{ user_id }}
+        </h1>
+        {% endif %}
     </div>
-    <div class="turnpage">
-        <form action="{{ url_for('index') }}" method="post">
-            <div style="float: left;">
-                <button type="submit" class="page-button">Previous Page</button>
-            </div>
-            &nbsp;&nbsp;
-            <div style="float: right;">
-                <button type="submit" class="page-button">Next Page</button>
-            </div>
-        </form>
-    </div>
-
-
 
 </body>
 
