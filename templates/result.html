@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+        <title>Steam Wishlist</title>
+    </head>
+    <body>
+        <nav>
+            <div>    
+                <!-- Search Bar -->
+	            <form class="search" action="{{ url_for('search') }}" method="post">
+                    <input type="text" id="search" name="search" class="search_input" required>&nbsp;
+                    <button type="submit" class="search_button">Search</button>
+                </form>
+            </div>
+        </nav>
+        <table border="1" align="center">
+            <thead>
+                <th> 關鍵字 </th>
+            </thead>
+            <tbody>
+                {% for keyword in keywords %}
+                <tr>
+                    <td> {{keyword}} </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

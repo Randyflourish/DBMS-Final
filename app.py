@@ -11,11 +11,12 @@ import hashlib
 # Note: the path of Dir:static and File:app.py is the same
 # DBMS-Final
 # ├─ static
-# │  ├─css
-# │  ├─icon
-# │  └─image
-# ├─db.py
-# └─app.py
+# │  ├─ css
+# │  ├─ js
+# │  ├─ icon
+# │  └─ image
+# ├─ db.py
+# └─ app.py
 
 # simple user database, this will be transplant to sql server
 users = ["test1", "test2", "test3"]
@@ -24,6 +25,7 @@ user_psw_pairs = {
     "test2" : "qwerty",
     "test3" : "1qaz2wsx"
 }
+
 app = Flask(__name__, static_folder = "static")
 
 # routing of home page/ index
@@ -42,10 +44,10 @@ def sign():
     
     # This condition should be modified in future.
     if valid_user(account, password):
-        # For a successful login, redirect to home page.
+        # For a successful login, redirect with user's account.
         return redirect(url_for("index", user = account))
     else:
-        # For a failed login, redirect to the same page, with modify.
+        # For a failed login, redirect with a null user called Unknown.
         return redirect(url_for("index", user = "Unknown"))
 
 # a temporary function for user validation
@@ -57,12 +59,20 @@ def valid_user(acc, psd):
 def search():
     keyword = request.form["search"]
     keywords = keyword.split(" ")
-    # this part should search the result first
-    # then uses it as a parameter to render html
-    return keywords
-    pass
-    return render_template("search.html", datas = db.search(keywords))
 
+    # just doing the handover
+    return redirect(url_for("result", keywords = keywords))
+
+# rendering searching result
+# the main function of searching function
+@app.route("/result/<keywords>")
+def result(keywords):
+    # beware that type(keywords) is string here
+    # thus converting to list is necessary
+    keywords_list = keywords[1:-1].replace("'", "").split(", ")
+
+    # This should be change into db.search(keywords) later
+    return render_template("result.html", keywords = keywords_list)
 
 if __name__ == "__main__":
     # to test on your own pc, change the host to
