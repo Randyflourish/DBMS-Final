@@ -7,26 +7,26 @@
         <title>Steam Wishlist</title>
     </head>
     <body>
-        
         <nav>
             <div>
                 <a onclick="ShowBlock('login')"><img src="icon/profile.png"></a>
                 <div id="login" class="modal">
-                <form class="modal-content animate" action="/index.html" method="post">
-                    <div class="titlecontainer">
-                        <h1>Log In</h1>
-                        <span onclick="CloseBlock('login')" class="close" title="Close">&times;</span>
-                    </div>
-                    <div class="container">
-                        <label for="uname"><b>Username</b></label>
-                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
-                        <label for="psw"><b>Password</b></label>
-                        <input type="password" placeholder="Enter Password" name="psw" required>
-                        <button class="login_button" type="submit">Log In</button>
-                        <button class="login_button" type="button" onclick="CloseBlock('login');ShowBlock('signup')">Sign Up</button>
-                    </div>
-                </form>
+                    <form class="modal-content animate" action="/index.html" method="post">
+                        <div class="titlecontainer">
+                            <h1>Log In</h1>
+                            <span onclick="CloseBlock('login')" class="close" title="Close">&times;</span>
+                        </div>
+                        <div class="container">
+                            <label for="uname"><b>Username</b></label>
+                            <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                            <label for="psw"><b>Password</b></label>
+                            <input type="password" placeholder="Enter Password" name="psw" required>
+                            <button class="login_button" type="submit">Log In</button>
+                            <button class="login_button" type="button" onclick="CloseBlock('login');ShowBlock('signup')">Sign Up</button>
+                        </div>
+                    </form>
                 </div>
+
                 <div id="signup" class="modal">
                     <form class="modal-content animate" action="/index.html" method="post">
                         <div class="titlecontainer">
@@ -44,15 +44,15 @@
                 </div>
                 <div id="selection" class="modal">
                     <div class="modal-content animate">
-                    <div class="titlecontainer">
-                        <span onclick="CloseBlock('selection')" class="close" title="Close">&times;</span>
-                    </div>
-                    <div class="container">
-                        <h1>User：</h1>
-                        <button class="login_button" type="button" onclick="ShowBlock('changeinformation');CloseBlock('selection')">Change account information</button>
-                        <button class="login_button" type="button" onclick="ShowBlock('deleteaccount');CloseBlock('selection')">Delete account</button>
-                        <button class="login_button" type="submit" onclick="CloseBlock('selection')">Log out</button>
-                    </div>
+                        <div class="titlecontainer">
+                            <span onclick="CloseBlock('selection')" class="close" title="Close">&times;</span>
+                        </div>
+                        <div class="container">
+                            <h1>User：</h1>
+                            <button class="login_button" type="button" onclick="ShowBlock('changeinformation');CloseBlock('selection')">Change account information</button>
+                            <button class="login_button" type="button" onclick="ShowBlock('deleteaccount');CloseBlock('selection')">Delete account</button>
+                            <button class="login_button" type="submit" onclick="CloseBlock('selection')">Log out</button>
+                        </div>
                     </div>
                 </div> 
                 <div id="changeinformation" class="modal">
@@ -96,23 +96,22 @@
                     </form>
                 </div>
             </div>
-            
-            <form class="search" action="/search" method="post">
+
+            <form class="search" action="/index.html" method="post">
                     <input type="text" id="search" name="search" class="search_input">&nbsp;
                     <button type="submit" class="search_button">Search</button>
-            </form>
-            <div>
+            
                 <a onclick="ShowBlock('sort')"><img src="icon/sort.png"></a>
                 <div id="sort" class="modal">
-                    <form class="modal-content animate" action="/index.html" method="post">
-                    <div class="titlecontainer">
-                        <h1>Sort</h1>
-                        <span onclick="CloseBlock('sort')" class="close" title="Close">&times;</span>
-                    </div>
+                    <div class="modal-content animate">
+                        <div class="titlecontainer">
+                            <h1>Sort</h1>
+                            <span onclick="CloseBlock('sort')" class="close" title="Close">&times;</span>
+                        </div>
                     <div class="container" style="display: inline-block;">
                         <h3>Condition</h3>
                         <div class="radio-item">
-                            <input class="login_input" type="radio" id="name" name="condition">
+                            <input class="login_input" type="radio" id="name" name="condition" checked>
                             <label for="name"><b>Name</b></label>
                         </div>
                         <div class="radio-item">
@@ -135,9 +134,10 @@
                             <input class="login_input" type="radio" id="Price" name="condition">
                             <label for="Price"><b>Price</b></label>
                         </div>
+
                         <h3>Order</h3>
                         <div class="radio-item">
-                            <input class="login_input" type="radio" id="order" name="order">
+                            <input class="login_input" type="radio" id="order" name="order" checked>
                             <label for="order"><b>Order</b></label>
                         </div>
                         <div class="radio-item">
@@ -150,10 +150,12 @@
                             <label for="noorder"><b>No Order</b></label>
                         </div>
                         <br>
-                        <button class="login_button" type="submit">OK</button>
+                        <button class="login_button" type="button" onclick="CloseBlock('sort')">OK</button>
+                        </div>
                     </div>
-                    </form>
                 </div>
+            </form>
+            <div>
                 <a href="search.html"><img src="icon/search.png"></a>
             </div>
         </nav>
