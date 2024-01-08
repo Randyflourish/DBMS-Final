@@ -102,7 +102,7 @@ def appDetailInfo(appid: str) -> dict:
     results = mycursor.fetchall()
     results = results[0]
     mycursor.reset()
-    infodict["desc"] = results[1]
+    infodict["desc"] = textAdjust(results[1])
     sql_command = "SELECT * FROM steam_media_data WHERE appid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
@@ -695,8 +695,39 @@ def searchByName(wordlist: list) -> list:
     return finallist
 
 def takePage(p: int, mylist: list) -> list:
+    limitpage = (len(mylist)+9) % 10
+    if p > limitpage:
+        p = limitpage
+    elif p < 1:
+        p = 1
     return mylist[10*(p-1):10*p-1]
 
+def textAdjust(s: str) -> str:
+    newstring = ''
+    c = 0
+    while c < len(s):
+        lft = s.find('<', c)
+        if lft == -1:
+            newstring += s[c:len(s)]
+            break
+        cnt = 1
+        if lft > c:
+            newstring += s[c:lft]
+        while cnt > 0:
+            nl = s.find('<', lft+1)
+            nr = s.find('>', lft+1)
+            if nl > nr or nl == -1:
+                cnt -= 1
+                lft = nr
+            else:
+                cnt += 1
+                lft = nl
+        newstring += " "
+        c = lft+1
+    newstring = newstring.replace("\t", " ")
+    newstring = newstring.replace("\n", " ")
+    newstring = ' '.join(newstring.split())
+    return newstring
 
 """
 #testing code
