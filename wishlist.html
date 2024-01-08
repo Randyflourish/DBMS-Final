@@ -45,6 +45,54 @@
             </div>
 
             <div>
+                <a onclick="ShowBlock('sort')"><img src="icon/sort.png"></a>
+                <div id="sort" class="modal">
+                    <form class="modal-content animate" action="/index.html" method="post">
+                    <div class="titlecontainer">
+                        <h1>Sort</h1>
+                        <span onclick="CloseBlock('sort')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container" style="display: inline-block;">
+                        <h3>Condition</h3>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="name" name="condition">
+                            <label for="name"><b>Name</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="date" name="condition">
+                            <label for="date"><b>Date</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="pratio" name="condition">
+                            <label for="pratio"><b>Pratio</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="prating" name="condition">
+                            <label for="prating"><b>prating</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="owners" name="condition">
+                            <label for="owners"><b>Owners</b></label>
+                        </div>
+                        <h3>Order</h3>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="order" name="order">
+                            <label for="order"><b>Order</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="reverseorder" name="order">
+                            <label for="reverseorder"><b>Reverse Order</b></label>
+                            
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="noorder" name="order">
+                            <label for="noorder"><b>No Order</b></label>
+                        </div>
+                        <br>
+                        <button class="login_button" type="submit">OK</button>
+                    </div>
+                    </form>
+                </div>
                 <a href="index.html"><img src="icon/home.png"></a>
             </div>
         </nav>
