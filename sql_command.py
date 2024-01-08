@@ -177,6 +177,7 @@ def createFList(uid: str, listname: str) -> int:
 
 # list[name, id]: list of flist
 # ord: 0:ASC, 1:DESC
+# not used
 def showFList(uid: str, ord: bool) -> list:
     global mydb, mycursor
     if type(uid) != str:
@@ -195,6 +196,7 @@ def showFList(uid: str, ord: bool) -> list:
     return flistlist
 
 # 0: newname exist, 1: success
+# not used
 def renameFList(uid: str, listid: str, newname:str) -> bool:
     global mydb, mycursor
     if type(listid) != str:
@@ -212,6 +214,7 @@ def renameFList(uid: str, listid: str, newname:str) -> bool:
     mycursor.reset()
     return 1
 
+# not used
 def mergeFList(uid: str, mainlistid: str, mergedlistid: str) -> None:
     global mydb, mycursor
     if type(uid) != str:
@@ -229,6 +232,7 @@ def mergeFList(uid: str, mainlistid: str, mergedlistid: str) -> None:
     mydb.commit()
     deleteFList(mergedlistid)
 
+# not used
 def deleteFList(listid: str) -> None:
     global mydb, mycursor
     if type(listid) != str:
@@ -267,12 +271,18 @@ def deleteUserFLists(uid: str) -> None:
     mycursor.reset()
 
 # 0: already in this flist, 1: success
-def insertAppIntoFList(appid: str, listid: str) -> bool:
+def insertAppIntoFList(uid: str, appid: str) -> bool:
     global mydb, mycursor
     if type(appid) != str:
         appid = str(appid)
-    if type(listid) != str:
-        listid = str(listid)
+    if type(uid) != str:
+        uid = str(uid)
+    mytup = (uid, )
+    sql_command = "SELECT listid FROM flist_conn_data WHERE userid = %s"
+    mycursor.execute(sql_command, mytup)
+    results = mycursor.fetchall()
+    mycursor.reset()
+    listid = str(results[0][0])
     mytup = (listid, appid)
     sql_command = "SELECT COUNT(*) FROM flist_data WHERE listid = %s AND appid = %s"
     mycursor.execute(sql_command, mytup)
@@ -287,10 +297,10 @@ def insertAppIntoFList(appid: str, listid: str) -> bool:
     return 1
 
 # list[id]: list of app
-def showAppFromFList(listid: str) -> list:
+def showAppFromFList(uid: str) -> list:
     global mydb, mycursor, sortingdict
-    if type(listid) != str:
-        listid = str(listid)
+    if type(uid) != str:
+        uid = str(uid)
     flistlist = list()
     srt = "ORDER BY "
     cnt = 0
@@ -319,24 +329,32 @@ def showAppFromFList(listid: str) -> list:
         srt += "DESC "
     else:
         srt += "ASC "
-    mytup = (listid, )
+    mytup = (uid, )
     sql_command = "SELECT f.appid FROM flist_data AS f\
         INNER JOIN steam_basic_data AS sb ON sb.appid = f.appid\
-        WHERE f.listid = %s "
+        INNER JOIN flist_conn_data AS fc ON fc.listid = f.listid\
+        WHERE fc.userid = %s "
     sql_command += srt
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
+    mycursor.reset()
     for col in results:
         flistlist.append(col[0])
     return flistlist
 
-# 0: not in this flist, 1: success
-def deleteAppFromFList(appid: str, listid: str) -> bool:
+# 0: not in flist, 1: success
+def deleteAppFromFList(uid: str, appid: str) -> bool:
     global mydb, mycursor
     if type(appid) != str:
         appid = str(appid)
-    if type(listid) != str:
-        listid = str(listid)
+    if type(uid) != str:
+        uid = str(uid)
+    mytup = (uid, )
+    sql_command = "SELECT listid FROM flist_conn_data WHERE userid = %s"
+    mycursor.execute(sql_command, mytup)
+    results = mycursor.fetchall()
+    listid = str(results[0][0])
+    mycursor.reset()
     mytup = (listid, appid)
     sql_command = "SELECT COUNT(*) FROM flist_data WHERE listid = %s AND appid = %s"
     mycursor.execute(sql_command, mytup)
@@ -371,6 +389,7 @@ def createUserAccount(userName: str, userPass: str) -> int:
     results = mycursor.fetchall()
     mycursor.reset()
     id = results[0][0]
+    createFList(id, "MyWishList")
     return id
 
 # 0: fail, 1: success
@@ -383,10 +402,7 @@ def deleteUserAccount(uid: str, userPass: str) -> int:
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     mycursor.reset()
-    try:
-        password = results[0][2]
-    except:
-        return -1
+    password = results[0][2]
     if userPass != password:
         return 0
     deleteUserFLists(uid)
@@ -479,7 +495,7 @@ def searchByTag(taglist: list) -> list:
             elif key == "owners":
                 srt += 'SUBSTRING_INDEX(owners, "-", 1) '
             else:
-                srt += ("sb."+key+" ")
+                srt += (key+" ")
             if sortingdict[key][1] == 0:
                 srt += "ASC "
             else:
@@ -487,7 +503,7 @@ def searchByTag(taglist: list) -> list:
             break
     if cnt == 1:
         srt += ", "
-    srt += "sb.name "
+    srt += "name "
     if sortingdict["name"][1] == 1:
         srt += "DESC "
     else:
@@ -514,8 +530,8 @@ def searchByTag(taglist: list) -> list:
         i += 1
     return finallist
 
-# input should be a list
 # []: no condiction, list[id] sorted by match tags
+# not used
 def searchByRange() -> list:
     global mydb, mycursor, rangedict, sortingdict
     sql_command = "SELECT appid FROM steam_basic_data WHERE "
@@ -605,7 +621,6 @@ def searchByRange() -> list:
         applist.append(col[0])
     return applist
 
-# input should be a list
 # 0: input type not list, list[id] sorted by match words and accuracy
 def searchByName(wordlist: list) -> list:
     global mydb, mycursor, sortingdict
@@ -647,7 +662,7 @@ def searchByName(wordlist: list) -> list:
             elif key == "owners":
                 srt += 'SUBSTRING_INDEX(owners, "-", 1) '
             else:
-                srt += ("sb."+key+" ")
+                srt += (key+" ")
             if sortingdict[key][1] == 0:
                 srt += "ASC "
             else:
@@ -655,7 +670,7 @@ def searchByName(wordlist: list) -> list:
             break
     if cnt == 1:
         srt += ", "
-    srt += "sb.name "
+    srt += "name "
     if sortingdict["name"][1] == 1:
         srt += "DESC "
     else:
@@ -692,32 +707,11 @@ def takePage(p: int, mylist: list) -> list:
 uid = createUserAccount("A","0800000123")
 renameUserAccount(uid, "B")
 resetUserPassword(uid, "1911111234")
-uid = createUserAccount("A","0800000123")
-lid = createFList(str(uid),"MiHoYo")
-insertAppIntoFList(1610, lid)
-insertAppIntoFList(1670, lid)
-flist = takePage(1, showFList(uid, 0))
+insertAppIntoFList(uid, 1610)
+insertAppIntoFList(uid, 1670)
+flist = takePage(1, showAppFromFList(uid))
 print(flist)
-flist = takePage(1, showAppFromFList(lid))
-print(flist)
-renameFList(uid, lid, "HoYoVerse")
-flist = takePage(1, showFList(uid, 0))
-print(flist)
-flist = takePage(1, showAppFromFList(lid))
-print(flist)
-lid = createFList(str(uid),"MiHoYo")
-insertAppIntoFList(1610, lid)
-flist = takePage(1, showFList(uid, 0))
-print(flist)
-flist = takePage(1, showAppFromFList(lid))
-print(flist)
-mergeFList(uid, lid, 1)
-flist = takePage(1, showFList(uid, 0))
-print(flist)
-flist = takePage(1, showAppFromFList(lid))
-print(flist)
-deleteUserAccount(1,"1911111234")
-deleteUserAccount(2,"0800000123")
+deleteUserAccount(uid,"1911111234")
 resetAI("user_data")
 resetAI("flist_conn_data")
 
