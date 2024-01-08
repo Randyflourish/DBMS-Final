@@ -10,12 +10,12 @@
         
         <nav>
             <div>
-                <a onclick="document.getElementById('login').style.display='block'"><img src="icon/profile.png" width="40"></a>
+                <a onclick="ShowBlock('login')"><img src="icon/profile.png"></a>
                 <div id="login" class="modal">
                 <form class="modal-content animate" action="/index.html" method="post">
-                    <div class="imgcontainer">
+                    <div class="titlecontainer">
                         <h1>Log In</h1>
-                        <span onclick="document.getElementById('login').style.display='none'" class="close" title="Close">&times;</span>
+                        <span onclick="CloseBlock('login')" class="close" title="Close">&times;</span>
                     </div>
                     <div class="container">
                         <label for="uname"><b>Username</b></label>
@@ -23,15 +23,15 @@
                         <label for="psw"><b>Password</b></label>
                         <input type="password" placeholder="Enter Password" name="psw" required>
                         <button class="login_button" type="submit">Log In</button>
-                        <button class="login_button" type="button" onclick="document.getElementById('signup').style.display='block';document.getElementById('login').style.display='none'">Sign Up</button>
+                        <button class="login_button" type="button" onclick="CloseBlock('login');ShowBlock('signup')">Sign Up</button>
                     </div>
                 </form>
                 </div>
                 <div id="signup" class="modal">
                     <form class="modal-content animate" action="/index.html" method="post">
-                        <div class="imgcontainer">
+                        <div class="titlecontainer">
                             <h1>Sign Up</h1>
-                            <span onclick="document.getElementById('signup').style.display='none'" class="close" title="Close">&times;</span>
+                            <span onclick="CloseBlock('signup')" class="close" title="Close">&times;</span>
                         </div>
                         <div class="container">
                             <label for="uname"><b>Username</b></label>
@@ -42,12 +42,12 @@
                         </div>
                     </form>
                 </div>
-                <a onclick="document.getElementById('favorite').style.display='block'"><img src="icon/heart.png" width="40"></a>
+                <a onclick="ShowBlock('favorite')"><img src="icon/heart.png"></a>
                 <div id="favorite" class="modal">
                     <form class="modal-content animate">
-                    <div class="imgcontainer">
+                    <div class="titlecontainer">
                         <h1>Alert</h1>
-                        <span onclick="document.getElementById('favorite').style.display='none'" class="close" title="Close">&times;</span>
+                        <span onclick="CloseBlock('favorite')" class="close" title="Close">&times;</span>
                     </div>
                     <div class="container">
                         <label style="text-align: center;font-size: 22px;"><b>You have not logged in yet.</b></label>
@@ -61,11 +61,122 @@
                     <button type="submit" class="search_button">Search</button>
             </form>
             <div>
-                <a href="#"><img src="icon/sort.png" width="40"></a>
-                <a href="#"><img src="icon/search.png" width="40"></a>
+                <a onclick="ShowBlock('sort')"><img src="icon/sort.png"></a>
+                <div id="sort" class="modal">
+                    <form class="modal-content animate" action="/index.html" method="post">
+                    <div class="titlecontainer">
+                        <h1>Sort</h1>
+                        <span onclick="CloseBlock('sort')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container" style="display: inline-block;">
+                        <h3>Condition</h3>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="name" name="condition">
+                            <label for="name"><b>Name</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="date" name="condition">
+                            <label for="date"><b>Date</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="pratio" name="condition">
+                            <label for="pratio"><b>Pratio</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="prating" name="condition">
+                            <label for="prating"><b>prating</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="owners" name="condition">
+                            <label for="owners"><b>Owners</b></label>
+                        </div>
+                        <h3>Order</h3>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="order" name="order">
+                            <label for="order"><b>Order</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="reverseorder" name="order">
+                            <label for="reverseorder"><b>Reverse Order</b></label>
+                            
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="noorder" name="order">
+                            <label for="noorder"><b>No Order</b></label>
+                        </div>
+                        <br>
+                        <button class="login_button" type="submit">OK</button>
+                    </div>
+                    </form>
+                </div>
+                <a href="search.html"><img src="icon/search.png"></a>
             </div>
         </nav>
-        
+        <br>
+        <div class="gamelist">
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>好評率</th>
+                    <th>好評數</th>
+                    <th>遊玩人數</th>
+                    <th>新增至願望清單</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+ 
+            </table>
+        </div>
+        <div class="turnpage">
+            <form action="/index.html" method="post">
+                <div style="float: left;">
+                    <button type="submit" class="page-button">Previous Page</button>
+                </div>
+                &nbsp;&nbsp;
+                <div style="float: right;">
+                    <button type="submit" class="page-button">Next Page</button>
+                </div>
+            </form>
+        </div>
         
 
         
