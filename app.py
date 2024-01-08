@@ -112,15 +112,27 @@ def logout():
 # handling search
 
 # handling searching
-@app.route("/searchName/<user_id>/<page>", methods = ["POST"])
-def searchName(page = 1, user_id = 0):
-    
-    keyword = ""
-    try:
-        keyword = request.form["search"]
-    except:
+@app.route("/searchName/<user_id>/<page>", methods = ["GET", "POST"])
+def searchName(page = 1, user_id = 0, keyword = ""):
+    addResult = -2
+    if request.method == "GET":
         keyword = request.args.get("search")
-    print(keyword)
+        addResult = request.args.get("addResult")
+    else:
+        try:
+            keyword = request.form["search"]
+            
+            sort_cond = request.form["condition"]
+            order = request.form["order"]
+            order_bool = True
+            if order == "Order":
+                order_bool = True
+            else:
+                order_bool = False
+            sql_command.modifySorting(sort_cond, order_bool)
+        except:
+            keyword = request.args.get("search")
+
     keywords_list = keyword[1:-1].replace("'", "").split(", ")
     
     searchResult = sql_command.searchByName(keywords_list)
@@ -134,10 +146,11 @@ def searchName(page = 1, user_id = 0):
     searchList = sql_command.takePage(int(page), searchResult)
     searchPage = sql_command.appShortInfo(searchList)
     
-    # just doing the handover
+    # just doing the handover    
     return render_template(
         "result.html", user_id = user_id, result = searchPage,
-          searchWay = "Name", page = int(page), keyword = keyword)
+          searchWay = "Name", page = int(page), keyword = keyword, addResult = int(addResult))
+   
 
 @app.route("/searchTag/<user_id>", methods = ["POST"])
 def searchTag(page = 1, user_id = 0):
@@ -146,6 +159,39 @@ def searchTag(page = 1, user_id = 0):
 
 # end of handling search
 #####################################################################
+#####################################################################
+# handling add or delete game
+
+@app.route("/addGame", methods = ["POST"])
+def addGame():
+    user_id = request.args.get("user_id")
+    game_id = request.args.get("game_id")
+    searchWay = request.args.get("searchWay")
+    keyword = request.args.get("search")
+    page = request.args.get("page")
+
+    if int(user_id) <= 0:
+        # addResult == 0 -> not login yet
+        print("BLOCK")
+        if searchWay == "Name":
+            return redirect(url_for("searchName", user_id = int(user_id), page = int(page), search = keyword, addResult = 0))
+        
+    print(str(user_id), str(game_id))
+    result = sql_command.insertAppIntoFList(str(user_id), str(game_id))
+    if result == 0:
+        # addResult == -1 -> failed
+        if searchWay == "Name":
+            return redirect(url_for("searchName", user_id = int(user_id), page = int(page), search = keyword, addResult = -1))
+    elif result == 1:
+        # addResult == 1 -> success
+        if searchWay == "Name":
+            return redirect(url_for("searchName", user_id = int(user_id), page = int(page), search = keyword, addResult = 1))
+
+
+
+
+
+
 
 if __name__ == "__main__":
     # to test on your own pc, change the host to

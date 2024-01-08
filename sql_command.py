@@ -16,6 +16,7 @@ categoriesList = ['Multi-player', 'Online Multi-Player', 'Local Multi-Player', '
 spytagsList = ['1980s', '1990s', '2.5d', '2d', '2d_fighter', '360_video', '3d', '3d_platformer', '3d_vision', '4_player_local', '4x', '6dof', 'atv', 'abstract', 'action', 'action_rpg', 'action_adventure', 'addictive', 'adventure', 'agriculture', 'aliens', 'alternate_history', 'america', 'animation_&_modeling', 'anime', 'arcade', 'arena_shooter', 'artificial_intelligence', 'assassin', 'asynchronous_multiplayer', 'atmospheric', 'audio_production', 'bmx', 'base_building', 'baseball', 'based_on_a_novel', 'basketball', 'batman', 'battle_royale', 'beat_em_up', 'beautiful', 'benchmark', 'bikes', 'blood', 'board_game', 'bowling', 'building', 'bullet_hell', 'bullet_time', 'crpg', 'capitalism', 'card_game', 'cartoon', 'cartoony', 'casual', 'cats', 'character_action_game', 'character_customization', 'chess', 'choices_matter', 'choose_your_own_adventure', 'cinematic', 'city_builder', 'class_based', 'classic', 'clicker', 'co_op', 'co_op_campaign', 'cold_war', 'colorful', 'comedy', 'comic_book', 'competitive', 'conspiracy', 'controller', 'conversation', 'crafting', 'crime', 'crowdfunded', 'cult_classic', 'cute', 'cyberpunk', 'cycling', 'dark', 'dark_comedy', 'dark_fantasy', 'dark_humor', 'dating_sim', 'demons', 'design_&_illustration', 'destruction', 'detective', 'difficult', 'dinosaurs', 'diplomacy', 'documentary', 'dog', 'dragons', 'drama', 'driving', 'dungeon_crawler', 'dungeons_&_dragons', 'dynamic_narration', 'dystopian_', 'early_access', 'economy', 'education', 'emotional', 'epic', 'episodic', 'experience', 'experimental', 'exploration', 'fmv', 'fps', 'faith', 'family_friendly', 'fantasy', 'fast_paced', 'feature_film', 'female_protagonist', 'fighting', 'first_person', 'fishing', 'flight', 'football', 'foreign', 'free_to_play', 'funny', 'futuristic', 'gambling', 'game_development', 'gamemaker', 'games_workshop', 'gaming', 'god_game', 'golf', 'gore', 'gothic', 'grand_strategy', 'great_soundtrack', 'grid_based_movement', 'gun_customization', 'hack_and_slash', 'hacking', 'hand_drawn', 'hardware', 'heist', 'hex_grid', 'hidden_object', 'historical', 'hockey', 'horror', 'horses', 'hunting', 'illuminati', 'indie', 'intentionally_awkward_controls', 'interactive_fiction', 'inventory_management', 'investigation', 'isometric', 'jrpg', 'jet', 'kickstarter', 'lego', 'lara_croft', 'lemmings', 'level_editor', 'linear', 'local_co_op', 'local_multiplayer', 'logic', 'loot', 'lore_rich', 'lovecraftian', 'mmorpg', 'moba', 'magic', 'management', 'mars', 'martial_arts', 'massively_multiplayer', 'masterpiece', 'match_3', 'mature', 'mechs', 'medieval', 'memes', 'metroidvania', 'military', 'mini_golf', 'minigames', 'minimalist', 'mining', 'mod', 'moddable', 'modern', 'motocross', 'motorbike', 'mouse_only', 'movie', 'multiplayer', 'multiple_endings', 'music', 'music_based_procedural_generation', 'mystery', 'mystery_dungeon', 'mythology', 'nsfw', 'narration', 'naval', 'ninja', 'noir', 'nonlinear', 'nudity', 'offroad', 'old_school', 'on_rails_shooter', 'online_co_op', 'open_world', 'otome', 'parkour', 'parody_', 'party_based_rpg', 'perma_death', 'philisophical', 'photo_editing', 'physics', 'pinball', 'pirates', 'pixel_graphics', 'platformer', 'point_&_click', 'political', 'politics', 'pool', 'post_apocalyptic', 'procedural_generation', 'programming', 'psychedelic', 'psychological', 'psychological_horror', 'puzzle', 'puzzle_platformer', 'pve', 'pvp', 'quick_time_events', 'rpg', 'rpgmaker', 'rts', 'racing', 'real_time_tactics', 'real_time', 'real_time_with_pause', 'realistic', 'relaxing', 'remake', 'replay_value', 'resource_management', 'retro', 'rhythm', 'robots', 'rogue_like', 'rogue_lite', 'romance', 'rome', 'runner', 'sailing', 'sandbox', 'satire', 'sci_fi', 'science', 'score_attack', 'sequel', 'sexual_content', 'shoot_em_up', 'shooter', 'short', 'side_scroller', 'silent_protagonist', 'simulation', 'singleplayer', 'skateboarding', 'skating', 'skiing', 'sniper', 'snow', 'snowboarding', 'soccer', 'software', 'software_training', 'sokoban', 'souls_like', 'soundtrack', 'space', 'space_sim', 'spectacle_fighter', 'spelling', 'split_screen', 'sports', 'star_wars', 'stealth', 'steam_machine', 'steampunk', 'story_rich', 'strategy', 'strategy_rpg', 'stylized', 'submarine', 'superhero', 'supernatural', 'surreal', 'survival', 'survival_horror', 'swordplay', 'tactical', 'tactical_rpg', 'tanks', 'team_based', 'tennis', 'text_based', 'third_person', 'third_person_shooter', 'thriller', 'time_attack', 'time_management', 'time_manipulation', 'time_travel', 'top_down', 'top_down_shooter', 'touch_friendly', 'tower_defense', 'trackir', 'trading', 'trading_card_game', 'trains', 'transhumanism', 'turn_based', 'turn_based_combat', 'turn_based_strategy', 'turn_based_tactics', 'tutorial', 'twin_stick_shooter', 'typing', 'underground', 'underwater', 'unforgiving', 'utilities', 'vr', 'vr_only', 'vampire', 'video_production', 'villain_protagonist', 'violent', 'visual_novel', 'voice_control', 'voxel', 'walking_simulator', 'war', 'wargame', 'warhammer_40k', 'web_publishing', 'werewolves', 'western', 'word_game', 'world_war_i', 'world_war_ii', 'wrestling', 'zombies', 'e_sports']
 
 # dict used in "searchByRnage", format: "condiction":[[use, lowerbound, upperbound],[possible ranges]], use(bool): 0 if not use, lower/upper(int): close interval of range index
+# not used
 rangedict = {
     # for the owner column, range[i] means from range[i] to range[i+1], ex: range[0] = 0 means from 0 to 20000
     "owners":[[0, 0, 11],[0, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000, 20000000, 50000000]],
@@ -30,11 +31,7 @@ rangedict = {
 
 # sorted: first value means the priority (0 if not use), second value means ASC(0) / DESC(1)
 # note: the priority should be 0, 1, 2
-sortingdict = {"release_date": [0, 0], "positive_ratings":[0, 0], "pratio":[0, 0], "owners":[0, 0], "price":[0, 0], "name": [1, 0]}
-
-# global
-searchResult = list()
-showResult = list()
+sortingdict = {"release_date": [0, 0], "positive_ratings":[0, 0], "pratio":[0, 0], "owners":[0, 0], "price":[0, 0], "name": [0, 0]}
 
 """
 def funList():
@@ -77,7 +74,6 @@ def appDetailInfo(appid: str) -> dict:
     infodict["categories"] = results[8].split(";")
     infodict["genres"] = results[9].split(";")
     infodict["tags"] = results[10].split(";")
-    infodict["achievements"] = results[11]
     infodict["pratings"] = results[12]
     infodict["nratings"] = results[13]
     # pratio: float, pratiopct: str(percentage)
@@ -106,16 +102,13 @@ def appDetailInfo(appid: str) -> dict:
     results = mycursor.fetchall()
     results = results[0]
     mycursor.reset()
-    infodict["about"] = results[2]
-    infodict["desc"] = results[1]
+    infodict["desc"] = textAdjust(results[1])
     sql_command = "SELECT * FROM steam_media_data WHERE appid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     results = results[0]
     mycursor.reset()
     infodict["headimg"] = results[1]
-    infodict["backimg"] = results[3]
-    infodict["screenshots"] = results[2]
     return infodict
 
 def appShortInfo(appidlist: list) -> dict:
@@ -136,7 +129,6 @@ def appShortInfo(appidlist: list) -> dict:
         infodict["date"] = results[2]
         # infodict["age"] = results[7]
         infodict["pratings"] = results[12]
-        infodict["nratings"] = results[13]
         # pratio: float, pratiopct: str(percentage)
         if results[12] + results[13] == 0:
             infodict["pratio"] = 0
@@ -145,11 +137,6 @@ def appShortInfo(appidlist: list) -> dict:
         infodict["pratiopct"] = str(round(infodict["pratio"]*100, 2))+"%"
         infodict["owners"] = results[16]
         infodict["price"] = results[17]
-        sql_command = "SELECT about_the_game FROM steam_desc_data WHERE appid = %s"
-        mycursor.execute(sql_command, mytup)
-        results = mycursor.fetchall()
-        mycursor.reset()
-        infodict["about"] = results[0]
         appdict[appid] = infodict.copy()
     return appdict
 
@@ -177,6 +164,7 @@ def createFList(uid: str, listname: str) -> int:
 
 # list[name, id]: list of flist
 # ord: 0:ASC, 1:DESC
+# not used
 def showFList(uid: str, ord: bool) -> list:
     global mydb, mycursor
     if type(uid) != str:
@@ -195,6 +183,7 @@ def showFList(uid: str, ord: bool) -> list:
     return flistlist
 
 # 0: newname exist, 1: success
+# not used
 def renameFList(uid: str, listid: str, newname:str) -> bool:
     global mydb, mycursor
     if type(listid) != str:
@@ -212,6 +201,7 @@ def renameFList(uid: str, listid: str, newname:str) -> bool:
     mycursor.reset()
     return 1
 
+# not used
 def mergeFList(uid: str, mainlistid: str, mergedlistid: str) -> None:
     global mydb, mycursor
     if type(uid) != str:
@@ -229,6 +219,7 @@ def mergeFList(uid: str, mainlistid: str, mergedlistid: str) -> None:
     mydb.commit()
     deleteFList(mergedlistid)
 
+# not used
 def deleteFList(listid: str) -> None:
     global mydb, mycursor
     if type(listid) != str:
@@ -267,16 +258,23 @@ def deleteUserFLists(uid: str) -> None:
     mycursor.reset()
 
 # 0: already in this flist, 1: success
-def insertAppIntoFList(appid: str, listid: str) -> bool:
+def insertAppIntoFList(uid: str, appid: str) -> bool:
     global mydb, mycursor
     if type(appid) != str:
         appid = str(appid)
-    if type(listid) != str:
-        listid = str(listid)
+    if type(uid) != str:
+        uid = str(uid)
+    mytup = (uid, )
+    sql_command = "SELECT listid FROM flist_conn_data WHERE userid = %s"
+    mycursor.execute(sql_command, mytup)
+    results = mycursor.fetchall()
+    mycursor.reset()
+    listid = str(results[0][0])
     mytup = (listid, appid)
     sql_command = "SELECT COUNT(*) FROM flist_data WHERE listid = %s AND appid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
+    mycursor.reset()
     cnt = results[0][0]
     if cnt != 0:
         return 0
@@ -287,10 +285,10 @@ def insertAppIntoFList(appid: str, listid: str) -> bool:
     return 1
 
 # list[id]: list of app
-def showAppFromFList(listid: str) -> list:
+def showAppFromFList(uid: str) -> list:
     global mydb, mycursor, sortingdict
-    if type(listid) != str:
-        listid = str(listid)
+    if type(uid) != str:
+        uid = str(uid)
     flistlist = list()
     srt = "ORDER BY "
     cnt = 0
@@ -319,24 +317,32 @@ def showAppFromFList(listid: str) -> list:
         srt += "DESC "
     else:
         srt += "ASC "
-    mytup = (listid, )
+    mytup = (uid, )
     sql_command = "SELECT f.appid FROM flist_data AS f\
         INNER JOIN steam_basic_data AS sb ON sb.appid = f.appid\
-        WHERE f.listid = %s "
+        INNER JOIN flist_conn_data AS fc ON fc.listid = f.listid\
+        WHERE fc.userid = %s "
     sql_command += srt
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
+    mycursor.reset()
     for col in results:
         flistlist.append(col[0])
     return flistlist
 
-# 0: not in this flist, 1: success
-def deleteAppFromFList(appid: str, listid: str) -> bool:
+# 0: not in flist, 1: success
+def deleteAppFromFList(uid: str, appid: str) -> bool:
     global mydb, mycursor
     if type(appid) != str:
         appid = str(appid)
-    if type(listid) != str:
-        listid = str(listid)
+    if type(uid) != str:
+        uid = str(uid)
+    mytup = (uid, )
+    sql_command = "SELECT listid FROM flist_conn_data WHERE userid = %s"
+    mycursor.execute(sql_command, mytup)
+    results = mycursor.fetchall()
+    listid = str(results[0][0])
+    mycursor.reset()
     mytup = (listid, appid)
     sql_command = "SELECT COUNT(*) FROM flist_data WHERE listid = %s AND appid = %s"
     mycursor.execute(sql_command, mytup)
@@ -371,6 +377,7 @@ def createUserAccount(userName: str, userPass: str) -> int:
     results = mycursor.fetchall()
     mycursor.reset()
     id = results[0][0]
+    createFList(id, "MyWishList")
     return id
 
 # 0: fail, 1: success
@@ -383,10 +390,7 @@ def deleteUserAccount(uid: str, userPass: str) -> int:
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     mycursor.reset()
-    try:
-        password = results[0][2]
-    except:
-        return -1
+    password = results[0][2]
     if userPass != password:
         return 0
     deleteUserFLists(uid)
@@ -444,6 +448,16 @@ def resetUserPassword(uid: str, newPass: str) -> int:
     mydb.commit()
     mycursor.reset()
     return 1
+
+# ord: ASC(0) / DESC(1)
+# key: "release_date", "positive_ratings", "pratio", "owners", "price", "name"
+def modifySorting(key: str, ord: bool) -> None:
+    global sortingdict
+    for k in sortingdict.keys():
+        sortingdict[k] = [0, 0]
+    sortingdict[key] = [1, 0]
+    if ord == 1:
+        sortingdict[key] = [1, 1]
 
 # list[id] sorted by match tags
 def searchByTag(taglist: list) -> list:
@@ -514,8 +528,8 @@ def searchByTag(taglist: list) -> list:
         i += 1
     return finallist
 
-# input should be a list
 # []: no condiction, list[id] sorted by match tags
+# not used
 def searchByRange() -> list:
     global mydb, mycursor, rangedict, sortingdict
     sql_command = "SELECT appid FROM steam_basic_data WHERE "
@@ -605,7 +619,6 @@ def searchByRange() -> list:
         applist.append(col[0])
     return applist
 
-# input should be a list
 # 0: input type not list, list[id] sorted by match words and accuracy
 def searchByName(wordlist: list) -> list:
     global mydb, mycursor, sortingdict
@@ -683,8 +696,39 @@ def searchByName(wordlist: list) -> list:
     return finallist
 
 def takePage(p: int, mylist: list) -> list:
+    limitpage = (len(mylist)+9) % 10
+    if p > limitpage:
+        p = limitpage
+    elif p < 1:
+        p = 1
     return mylist[10*(p-1):10*p-1]
 
+def textAdjust(s: str) -> str:
+    newstring = ''
+    c = 0
+    while c < len(s):
+        lft = s.find('<', c)
+        if lft == -1:
+            newstring += s[c:len(s)]
+            break
+        cnt = 1
+        if lft > c:
+            newstring += s[c:lft]
+        while cnt > 0:
+            nl = s.find('<', lft+1)
+            nr = s.find('>', lft+1)
+            if nl > nr or nl == -1:
+                cnt -= 1
+                lft = nr
+            else:
+                cnt += 1
+                lft = nl
+        newstring += " "
+        c = lft+1
+    newstring = newstring.replace("\t", " ")
+    newstring = newstring.replace("\n", " ")
+    newstring = ' '.join(newstring.split())
+    return newstring
 
 """
 #testing code
@@ -692,32 +736,11 @@ def takePage(p: int, mylist: list) -> list:
 uid = createUserAccount("A","0800000123")
 renameUserAccount(uid, "B")
 resetUserPassword(uid, "1911111234")
-uid = createUserAccount("A","0800000123")
-lid = createFList(str(uid),"MiHoYo")
-insertAppIntoFList(1610, lid)
-insertAppIntoFList(1670, lid)
-flist = takePage(1, showFList(uid, 0))
+insertAppIntoFList(uid, 1610)
+insertAppIntoFList(uid, 1670)
+flist = takePage(1, showAppFromFList(uid))
 print(flist)
-flist = takePage(1, showAppFromFList(lid))
-print(flist)
-renameFList(uid, lid, "HoYoVerse")
-flist = takePage(1, showFList(uid, 0))
-print(flist)
-flist = takePage(1, showAppFromFList(lid))
-print(flist)
-lid = createFList(str(uid),"MiHoYo")
-insertAppIntoFList(1610, lid)
-flist = takePage(1, showFList(uid, 0))
-print(flist)
-flist = takePage(1, showAppFromFList(lid))
-print(flist)
-mergeFList(uid, lid, 1)
-flist = takePage(1, showFList(uid, 0))
-print(flist)
-flist = takePage(1, showAppFromFList(lid))
-print(flist)
-deleteUserAccount(1,"1911111234")
-deleteUserAccount(2,"0800000123")
+deleteUserAccount(uid,"1911111234")
 resetAI("user_data")
 resetAI("flist_conn_data")
 
@@ -727,4 +750,3 @@ searchResult = searchByName(["neko"])
 for info in appShortInfo(takePage(1, searchResult)).values():
     print(info)
 """
-
