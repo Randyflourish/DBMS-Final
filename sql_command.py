@@ -49,19 +49,19 @@ def funList():
     return taglist
 """
 # reset auto increment of table: should not called in app
-def resetAI(tablename):
+def resetAI(tablename: str) -> None:
     global mydb, mycursor
     sql_command = "ALTER TABLE "+tablename+" AUTO_INCREMENT = 1"
     mycursor.execute(sql_command)
     mydb.commit()
     mycursor.reset()
 
-#dictionary with a lot of keys
-def appDetailInfo(appid):
+
+def appDetailInfo(appid: str) -> dict:
     global mydb, mycursor
-    infodict=dict()
     if type(appid) != str:
         appid = str(appid)
+    infodict=dict()
     mytup = (appid, )
     sql_command = "SELECT * FROM steam_basic_data WHERE appid = %s"
     mycursor.execute(sql_command, mytup)
@@ -119,8 +119,7 @@ def appDetailInfo(appid):
     infodict["screenshots"] = results[2]
     return infodict
 
-#dictionary of dictionary with a lot of keys
-def appShortInfo(appidlist):
+def appShortInfo(appidlist: list) -> dict:
     global mycursor, mydb
     appdict = dict()
     infodict=dict()
@@ -155,8 +154,7 @@ def appShortInfo(appidlist):
         appdict[appid] = infodict.copy()
     return appdict
 
-# 0: name has been used, id: new list id
-def createFList(uid, listname):
+def createFList(uid: str, listname: str) -> int:
     global mydb, mycursor
     if type(uid) != str:
         uid = str(uid)
@@ -178,19 +176,13 @@ def createFList(uid, listname):
     id = results[0][0]
     return id
 
-# ord: 0:ASC by name, 1:; DESC by name
-# 0: no flist, list[name, id]: list of flist
-def showFList(uid, ord):
+# list[name, id]: list of flist
+# ord: 0:ASC, 1:DESC
+def showFList(uid: str, ord: bool) -> list:
     global mydb, mycursor
     if type(uid) != str:
         uid = str(uid)
     flistlist = list()
-    mytup = (uid,)
-    sql_command = "SELECT COUNT(*) FROM flist_conn_data WHERE userid = %s"
-    mycursor.execute(sql_command, mytup)
-    results = mycursor.fetchall()
-    if results[0][0] == 0:
-        return 0
     mytup = (uid, )
     sql_command = "SELECT listname, listid FROM flist_conn_data WHERE userid = %s ORDER BY listname "
     if ord == 0:
@@ -204,7 +196,7 @@ def showFList(uid, ord):
     return flistlist
 
 # 0: newname exist, 1: success
-def renameFList(uid, listid, newname):
+def renameFList(uid: str, listid: str, newname:str) -> bool:
     global mydb, mycursor
     if type(listid) != str:
         listid = str(listid)
@@ -221,7 +213,7 @@ def renameFList(uid, listid, newname):
     mycursor.reset()
     return 1
 
-def mergeFList(uid, mainlistid, mergedlistid):
+def mergeFList(uid: str, mainlistid: str, mergedlistid: str) -> None:
     global mydb, mycursor
     if type(uid) != str:
         uid = str(uid)
@@ -238,7 +230,7 @@ def mergeFList(uid, mainlistid, mergedlistid):
     mydb.commit()
     deleteFList(mergedlistid)
 
-def deleteFList(listid):
+def deleteFList(listid: str) -> None:
     global mydb, mycursor
     if type(listid) != str:
         listid = str(listid)
@@ -252,7 +244,7 @@ def deleteFList(listid):
     mydb.commit()
     mycursor.reset()
 
-def deleteUserFLists(uid):
+def deleteUserFLists(uid: str) -> None:
     global mydb, mycursor
     mytup = (uid, )
     sql_command = "SELECT listid FROM flist_conn_data WHERE userid = %s"
@@ -276,7 +268,7 @@ def deleteUserFLists(uid):
     mycursor.reset()
 
 # 0: already in this flist, 1: success
-def insertAppIntoFList(appid, listid):
+def insertAppIntoFList(appid: str, listid: str) -> bool:
     global mydb, mycursor
     if type(appid) != str:
         appid = str(appid)
@@ -295,18 +287,12 @@ def insertAppIntoFList(appid, listid):
     mycursor.reset()
     return 1
 
-# 0: no app, list[id]: list of app
-def showAppFromFList(listid):
+# list[id]: list of app
+def showAppFromFList(listid: str) -> list:
     global mydb, mycursor, sortingdict
     if type(listid) != str:
         listid = str(listid)
     flistlist = list()
-    mytup = (listid,)
-    sql_command = "SELECT COUNT(*) FROM flist_data WHERE listid = %s"
-    mycursor.execute(sql_command, mytup)
-    results = mycursor.fetchall()
-    if results[0][0] == 0:
-        return 0
     srt = "ORDER BY "
     j = 1
     nxt = True
@@ -343,7 +329,7 @@ def showAppFromFList(listid):
     return flistlist
 
 # 0: not in this flist, 1: success
-def deleteAppFromFList(appid, listid):
+def deleteAppFromFList(appid: str, listid: str) -> bool:
     global mydb, mycursor
     if type(appid) != str:
         appid = str(appid)
@@ -363,7 +349,7 @@ def deleteAppFromFList(appid, listid):
     return 1
 
 # 0: account has been used, id: new account id
-def createUserAccount(userName, userPass):
+def createUserAccount(userName: str, userPass: str) -> int:
     global mydb, mycursor
     sql_command = "SELECT COUNT(username) FROM user_data WHERE username = %s"
     mytup = (userName, )
@@ -386,7 +372,7 @@ def createUserAccount(userName, userPass):
     return id
 
 # -1: account does not exist, 0: password fail, 1: success
-def deleteUserAccount(uid, userPass):
+def deleteUserAccount(uid: str, userPass: str) -> int:
     global mydb, mycursor
     if type(uid) != str:
         uid = str(uid)
@@ -410,7 +396,7 @@ def deleteUserAccount(uid, userPass):
     return 1
 
 # -1: account does not exist, 0: password fail, id: login
-def login(userName, userPass):
+def login(userName: str, userPass: str) -> int:
     global mydb, mycursor
     sql_command = "SELECT * FROM user_data WHERE username = %s"
     mytup = (userName, )
@@ -427,7 +413,7 @@ def login(userName, userPass):
     return id
 
 # -1: account has been exist, 0: password fail, 1: success
-def renameUserAccount(uid, userPass, newname):
+def renameUserAccount(uid: str, userPass: str, newname: str) -> int:
     global mycursor, mydb
     if type(uid) != str:
         uid = str(uid)
@@ -453,7 +439,7 @@ def renameUserAccount(uid, userPass, newname):
     return 1
 
 # 0: password fail, 1: success
-def resetUserPassword(uid, originalPass, newPass):
+def resetUserPassword(uid: str, originalPass: str, newPass: str) -> int:
     global mycursor, mydb
     if type(uid) != str:
         uid = str(uid)
@@ -471,12 +457,11 @@ def resetUserPassword(uid, originalPass, newPass):
     mycursor.reset()
     return 1
 
-# input should be a list
-# 0: input type not list, list[id] sorted by match tags
-def searchByTag(taglist):
+# list[id] sorted by match tags
+def searchByTag(taglist: list) -> list:
     global mydb, mycursor, sortingdict
     if type(taglist) != list:
-        return 0
+        return []
     sql_command = "SELECT sb.appid FROM steam_basic_data AS sb WHERE genres LIKE %s OR categories like %s OR steamspy_tags like %s "
     appdict = dict()
     for tag in taglist:
@@ -541,7 +526,7 @@ def searchByTag(taglist):
 
 # input should be a list
 # []: no condiction, list[id] sorted by match tags
-def searchByRange():
+def searchByRange() -> list:
     global mydb, mycursor, rangedict, sortingdict
     sql_command = "SELECT appid FROM steam_basic_data WHERE "
     condiction = '('
@@ -629,7 +614,7 @@ def searchByRange():
 
 # input should be a list
 # 0: input type not list, list[id] sorted by match words and accuracy
-def searchByName(wordlist):
+def searchByName(wordlist: list) -> list:
     global mydb, mycursor, sortingdict
     if type(wordlist) != list:
         return 0
@@ -703,8 +688,8 @@ def searchByName(wordlist):
         i += 1
     return finallist
 
-def takePage(p, mylist):
-    return mylist[25*(p-1):25*p-1]
+def takePage(p: int, mylist: list) -> list:
+    return mylist[10*(p-1):10*p-1]
 
 
 """

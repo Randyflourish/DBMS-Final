@@ -4,9 +4,6 @@ from flask import Flask, render_template, request, url_for
 # import hashlib module
 import hashlib
 
-# import database module
-import db
-
 # assign "static" as the static folder
 # Note: the path of D:static and F:app.py is the same
 # DBMS-Final
