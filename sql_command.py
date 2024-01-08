@@ -176,8 +176,9 @@ def createFList(uid, listname):
     id = results[0][0]
     return id
 
+# ord: 0:ASC by name, 1:; DESC by name
 # 0: no flist, list[name, id]: list of flist
-def showFList(uid):
+def showFList(uid, ord):
     global mydb, mycursor
     if type(uid) != str:
         uid = str(uid)
@@ -189,7 +190,11 @@ def showFList(uid):
     if results[0][0] == 0:
         return 0
     mytup = (uid, )
-    sql_command = "SELECT listname, listid FROM flist_conn_data WHERE userid = %s ORDER BY listname ASC"
+    sql_command = "SELECT listname, listid FROM flist_conn_data WHERE userid = %s ORDER BY listname "
+    if ord == 0:
+        sql_command += "ASC"
+    else:
+        sql_command += "DESC"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     for col in results:
@@ -710,23 +715,23 @@ uid = createUserAccount("A","0800000123")
 lid = createFList(str(uid),"MiHoYo")
 insertAppIntoFList(1610, lid)
 insertAppIntoFList(1670, lid)
-flist = takePage(1, showFList(uid))
+flist = takePage(1, showFList(uid, 0))
 print(flist)
 flist = takePage(1, showAppFromFList(lid))
 print(flist)
 renameFList(uid, lid, "HoYoVerse")
-flist = takePage(1, showFList(uid))
+flist = takePage(1, showFList(uid, 0))
 print(flist)
 flist = takePage(1, showAppFromFList(lid))
 print(flist)
 lid = createFList(str(uid),"MiHoYo")
 insertAppIntoFList(1610, lid)
-flist = takePage(1, showFList(uid))
+flist = takePage(1, showFList(uid, 0))
 print(flist)
 flist = takePage(1, showAppFromFList(lid))
 print(flist)
 mergeFList(uid, lid, 1)
-flist = takePage(1, showFList(uid))
+flist = takePage(1, showFList(uid, 0))
 print(flist)
 flist = takePage(1, showAppFromFList(lid))
 print(flist)
