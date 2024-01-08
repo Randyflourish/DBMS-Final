@@ -31,8 +31,11 @@ app = Flask(__name__, static_folder = "static")
 # routing of home page/ index
 @app.route("/")
 @app.route("/index/<user_id>")
-def index(user_id = ""):
+def index(user_id = 0):
     return render_template("index.html", user_id = user_id)
+
+#############################################################
+# hadling login problems
 
 # routing of login page
 # handling login request
@@ -41,16 +44,45 @@ def sign():
     # for POST request, we should check the user validation
     account = request.form["uname"]
     password = request.form["psw"]
-    
     user_id = sql_command.login(account, password)
-    # This condition should be modified in future.
 
     # For a successful login, redirect with user's account.
-    return redirect(url_for("index", user = user_id))
+    # Else redirect to user_id == -1 as failed.
+    if user_id == 0:
+        return redirect(url_for("index", user_id = -1))
+    else:
+        return redirect(url_for("index", user_id = user_id))
 
-# a temporary function for user validation
-def valid_user(acc, psd):
-    return acc in users and psd == user_psw_pairs[acc]
+@app.route("/regist", methods = ["POST"])
+def regist():
+    account = request.form["uname"]
+    password = request.form["psw"]
+
+    user_id = sql_command.createUserAccount(account, password)
+    
+    if user_id == 0:
+        # user_id == -2 -> user used
+        return redirect(url_for("index", user_id = -2))
+    else:
+        return redirect(url_for("index", user_id = user_id))
+
+@app.route("/changeUser/<user_id>", methods = ["POST"])
+def change_user_info(user_id):
+    new_account = request.form["uname"]
+    new_password = request.form["psw"]
+
+    account_result = sql_command.renameUserAccount(user_id, new_account)
+    password_result = sql_command.resetUserPassword(user_id, new_password)
+    change_result = sql_command.changeUserInfo(user_id, new_account, new_password)
+    if change_result == 1:
+        # success
+    else:
+        # failed
+        return redirect(url_for("index", user_id = ))
+
+# end of login problems
+##################################################################
+
 
 # handling searching
 @app.route("/search", methods = ["POST"])
