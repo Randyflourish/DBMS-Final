@@ -29,7 +29,7 @@ rangedict = {
 }
 
 # sorted: first value means the priority (0 if not use), second value means ASC(0) / DESC(1)
-# note: the priority should be continuous integer between 1 and 5 (or 0)
+# note: the priority should be continuous integer between 1 and 6 (or 0)
 sortingdict = {"name": [1, 0], "release_date": [0, 0], "positive_ratings":[0, 0], "pratio":[0, 0], "owners":[0, 0], "price":[0, 0]}
 
 # global
@@ -145,6 +145,11 @@ def appShortInfo(appidlist):
         infodict["pratiopct"] = str(round(infodict["pratio"]*100, 2))+"%"
         infodict["owners"] = results[16]
         infodict["price"] = results[17]
+        sql_command = "SELECT about_the_game FROM steam_desc_data WHERE appid = %s"
+        mycursor.execute(sql_command, mytup)
+        results = mycursor.fetchall()
+        mycursor.reset()
+        infodict["about"] = results[0]
         appdict[appid] = infodict.copy()
     return appdict
 
@@ -733,8 +738,6 @@ resetAI("flist_conn_data")
 #testing code 2
 
 searchResult = searchByName(["neko"])
-print(takePage(1, searchResult))
+for info in appShortInfo(takePage(1, searchResult)).values():
+    print(info)
 """
-
-searchResult = searchByName(["neko"])
-print(appShortInfo(takePage(1, searchResult)))
