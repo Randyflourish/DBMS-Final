@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, url_for, redirect
 import hashlib
 
 # import database module
-# import db
+import sql_command
 
 # assign "static" as the static folder
 # Note: the path of Dir:static and File:app.py is the same
@@ -30,9 +30,9 @@ app = Flask(__name__, static_folder = "static")
 
 # routing of home page/ index
 @app.route("/")
-@app.route("/index/<user>")
-def index(user = ""):
-    return render_template("index.html", user = user)
+@app.route("/index/<user_id>")
+def index(user_id = ""):
+    return render_template("index.html", user_id = user_id)
 
 # routing of login page
 # handling login request
@@ -42,13 +42,11 @@ def sign():
     account = request.form["uname"]
     password = request.form["psw"]
     
+    user_id = sql_command.login(account, password)
     # This condition should be modified in future.
-    if valid_user(account, password):
-        # For a successful login, redirect with user's account.
-        return redirect(url_for("index", user = account))
-    else:
-        # For a failed login, redirect with a null user called Unknown.
-        return redirect(url_for("index", user = "Unknown"))
+
+    # For a successful login, redirect with user's account.
+    return redirect(url_for("index", user = user_id))
 
 # a temporary function for user validation
 def valid_user(acc, psd):
@@ -77,5 +75,4 @@ def result(keywords):
 if __name__ == "__main__":
     # to test on your own pc, change the host to
     # "localhost"
-    app.run(debug = True, host = "140.113.89.236", port = 5000)
-
+    app.run(debug = True)

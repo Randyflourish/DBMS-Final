@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/index.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="js/index.js"></script>
+        <title>Steam Wishlist</title>
+    </head>
+    <body>
+        
+        <nav>
+            <div>
+                <a onclick="ShowBlock('login')"><img src="icon/profile.png"></a>
+                <div id="login" class="modal">
+                <form class="modal-content animate" action="/index.html" method="post">
+                    <div class="titlecontainer">
+                        <h1>Log In</h1>
+                        <span onclick="CloseBlock('login')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="uname"><b>Username</b></label>
+                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit">Log In</button>
+                        <button class="login_button" type="button" onclick="CloseBlock('login');ShowBlock('signup')">Sign Up</button>
+                    </div>
+                </form>
+                </div>
+                <div id="signup" class="modal">
+                    <form class="modal-content animate" action="/index.html" method="post">
+                        <div class="titlecontainer">
+                            <h1>Sign Up</h1>
+                            <span onclick="CloseBlock('signup')" class="close" title="Close">&times;</span>
+                        </div>
+                        <div class="container">
+                            <label for="uname"><b>Username</b></label>
+                            <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                            <label for="psw"><b>Password</b></label>
+                            <input type="password" placeholder="Enter Password" name="psw" required>
+                            <button class="login_button" type="submit">Sign up</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <a href="index.html"><img src="icon/home.png"></a>
+            </div>
+        </nav>
+        <br>
+        <div class="gamelist">
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>好評率</th>
+                    <th>好評數</th>
+                    <th>遊玩人數</th>
+                    <th>從願望清單移除</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+ 
+            </table>
+        </div>
+        <div class="turnpage">
+            <form action="/index.html" method="post">
+                <div style="float: left;">
+                    <button type="submit" class="page-button">Previous Page</button>
+                </div>
+                &nbsp;&nbsp;
+                <div style="float: right;">
+                    <button type="submit" class="page-button">Next Page</button>
+                </div>
+            </form>
+        </div>
+
+        
+    </body>
+</html>
