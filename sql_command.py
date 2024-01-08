@@ -30,7 +30,7 @@ rangedict = {
 
 # sorted: first value means the priority (0 if not use), second value means ASC(0) / DESC(1)
 # note: the priority should be continuous integer between 1 and 5 (or 0)
-sortingdict = {"name": [1, 0], "release_date": [0, 0], "positive_ratings":[0, 0], "pratio":[0, 0], "owners":[0, 0]}
+sortingdict = {"name": [1, 0], "release_date": [0, 0], "positive_ratings":[0, 0], "pratio":[0, 0], "owners":[0, 0], "price":[0, 0]}
 
 # global
 searchResult = list()
@@ -85,7 +85,7 @@ def appDetailInfo(appid):
         infodict["pratio"] = 0
     else:
         infodict["pratio"] = results[12] / (results[12]+results[13])
-    infodict["pratiopct"] = str(round(infodict["pratio"], 3)*100)+"%"
+    infodict["pratiopct"] = str(round(infodict["pratio"]*100,1))+"%"
     infodict["avetime"] = results[14]
     infodict["medtime"] = results[15]
     infodict["owners"] = results[16]
@@ -117,6 +117,36 @@ def appDetailInfo(appid):
     infodict["backimg"] = results[3]
     infodict["screenshots"] = results[2]
     return infodict
+
+#dictionary of dictionary with a lot of keys
+def appShortInfo(appidlist):
+    global mycursor, mydb
+    appdict = dict()
+    infodict=dict()
+    for appid in appidlist:
+        infodict.clear()
+        id = str(appid)
+        mytup = (id, )
+        sql_command = "SELECT * FROM steam_basic_data WHERE appid = %s"
+        mycursor.execute(sql_command, mytup)
+        results = mycursor.fetchall()
+        results = results[0]
+        mycursor.reset()
+        # infodict["id"] = results[0]
+        infodict["name"] = results[1]
+        infodict["date"] = results[2]
+        # infodict["age"] = results[7]
+        infodict["pratings"] = results[12]
+        # pratio: float, pratiopct: str(percentage)
+        if results[12] + results[13] == 0:
+            infodict["pratio"] = 0
+        else:
+            infodict["pratio"] = results[12] / (results[12]+results[13])
+        infodict["pratiopct"] = str(round(infodict["pratio"]*100, 2))+"%"
+        infodict["owners"] = results[16]
+        infodict["price"] = results[17]
+        appdict[appid] = infodict.copy()
+    return appdict
 
 # 0: name has been used, id: new list id
 def createFList(uid, listname):
@@ -706,3 +736,5 @@ searchResult = searchByName(["neko"])
 print(takePage(1, searchResult))
 """
 
+searchResult = searchByName(["neko"])
+print(appShortInfo(takePage(1, searchResult)))
