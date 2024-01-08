@@ -29,8 +29,8 @@ rangedict = {
 }
 
 # sorted: first value means the priority (0 if not use), second value means ASC(0) / DESC(1)
-# note: the priority should be continuous integer between 1 and 6 (or 0)
-sortingdict = {"name": [1, 0], "release_date": [0, 0], "positive_ratings":[0, 0], "pratio":[0, 0], "owners":[0, 0], "price":[0, 0]}
+# note: the priority should be 0, 1, 2
+sortingdict = {"release_date": [0, 0], "positive_ratings":[0, 0], "pratio":[0, 0], "owners":[0, 0], "price":[0, 0], "name": [1, 0]}
 
 # global
 searchResult = list()
@@ -55,7 +55,6 @@ def resetAI(tablename: str) -> None:
     mycursor.execute(sql_command)
     mydb.commit()
     mycursor.reset()
-
 
 def appDetailInfo(appid: str) -> dict:
     global mydb, mycursor
@@ -294,34 +293,37 @@ def showAppFromFList(listid: str) -> list:
         listid = str(listid)
     flistlist = list()
     srt = "ORDER BY "
-    j = 1
-    nxt = True
-    while nxt:
-        nxt = False
-        for key in sortingdict.keys():
-            if sortingdict[key][0] == j:
-                if j > 1:
-                    srt += ','
-                j += 1
-                nxt = True
-                if key == "pratio":
-                    srt += "CASE positive_ratings + negative_ratings\
-                        WHEN 0 THEN 0 ELSE positive_ratings/(positive_ratings + negative_ratings) END "
-                elif key == "owners":
-                    srt += 'SUBSTRING_INDEX(owners, "-", 1) '
-                else:
-                    srt += (key+" ")
-                if sortingdict[key][1] == 0:
-                    srt += "ASC "
-                else:
-                    srt += "DESC "
-                continue
+    cnt = 0
+    for key in sortingdict.keys():
+        if key == "name":
+            continue
+        if sortingdict[key][0] == 1:
+            cnt = 1
+            nxt = True
+            if key == "pratio":
+                srt += "CASE sb.positive_ratings + sb.negative_ratings\
+                    WHEN 0 THEN 0 ELSE sb.positive_ratings/(sb.positive_ratings + sb.negative_ratings) END "
+            elif key == "owners":
+                srt += 'SUBSTRING_INDEX(owners, "-", 1) '
+            else:
+                srt += ("sb."+key+" ")
+            if sortingdict[key][1] == 0:
+                srt += "ASC "
+            else:
+                srt += "DESC "
+            break
+    if cnt == 1:
+        srt += ", "
+    srt += "sb.name "
+    if sortingdict["name"][1] == 1:
+        srt += "DESC "
+    else:
+        srt += "ASC "
     mytup = (listid, )
     sql_command = "SELECT f.appid FROM flist_data AS f\
-        INNER JOIN (SELECT steam_basic_data.appid, steam_basic_data.name FROM steam_basic_data) AS sb ON sb.appid = f.appid\
+        INNER JOIN steam_basic_data AS sb ON sb.appid = f.appid\
         WHERE f.listid = %s "
-    if j > 1:
-        sql_command += srt
+    sql_command += srt
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     for col in results:
@@ -371,7 +373,7 @@ def createUserAccount(userName: str, userPass: str) -> int:
     id = results[0][0]
     return id
 
-# -1: account does not exist, 0: password fail, 1: success
+# 0: fail, 1: success
 def deleteUserAccount(uid: str, userPass: str) -> int:
     global mydb, mycursor
     if type(uid) != str:
@@ -395,7 +397,7 @@ def deleteUserAccount(uid: str, userPass: str) -> int:
     mycursor.reset()
     return 1
 
-# -1: account does not exist, 0: password fail, id: login
+# 0: fail, id: login
 def login(userName: str, userPass: str) -> int:
     global mydb, mycursor
     sql_command = "SELECT * FROM user_data WHERE username = %s"
@@ -412,20 +414,13 @@ def login(userName: str, userPass: str) -> int:
         return 0
     return id
 
-# -1: account has been exist, 0: password fail, 1: success
-def renameUserAccount(uid: str, userPass: str, newname: str) -> int:
+# 0: account has been exist, 1: success
+def renameUserAccount(uid: str, newname: str) -> int:
     global mycursor, mydb
     if type(uid) != str:
         uid = str(uid)
-    mytup = (uid, )
-    sql_command = "SELECT userpassword FROM user_data WHERE userid = %s"
-    mycursor.execute(sql_command, mytup)
-    results = mycursor.fetchall()
-    mycursor.reset()
-    if userPass != results[0][0]:
-        return 0
-    mytup = (newname, )
-    sql_command = "SELECT count(*) FROM user_data WHERE username = %s"
+    mytup = (newname, uid)
+    sql_command = "SELECT count(*) FROM user_data WHERE username = %s and userid <> %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
     mycursor.reset()
@@ -439,17 +434,10 @@ def renameUserAccount(uid: str, userPass: str, newname: str) -> int:
     return 1
 
 # 0: password fail, 1: success
-def resetUserPassword(uid: str, originalPass: str, newPass: str) -> int:
+def resetUserPassword(uid: str, newPass: str) -> int:
     global mycursor, mydb
     if type(uid) != str:
         uid = str(uid)
-    mytup = (uid, )
-    sql_command = "SELECT userpassword FROM user_data WHERE userid = %s"
-    mycursor.execute(sql_command, mytup)
-    results = mycursor.fetchall()
-    mycursor.reset()
-    if originalPass != results[0][0]:
-        return 0
     mytup = (newPass, uid)
     sql_command = "UPDATE user_data SET userpassword = %s WHERE userid = %s"
     mycursor.execute(sql_command, mytup)
@@ -478,28 +466,32 @@ def searchByTag(taglist: list) -> list:
     applist = sorted(appdict.items(), key = lambda x:(x[1],x[0]), reverse=True)
     finallist = []
     srt = "ORDER BY "
-    j = 1
-    nxt = True
-    while nxt:
-        nxt = False
-        for key in sortingdict.keys():
-            if sortingdict[key][0] == j:
-                if j > 1:
-                    srt += ','
-                j += 1
-                nxt = True
-                if key == "pratio":
-                    srt += "CASE positive_ratings + negative_ratings\
-                        WHEN 0 THEN 0 ELSE positive_ratings/(positive_ratings + negative_ratings) END "
-                elif key == "owners":
-                    srt += 'SUBSTRING_INDEX(owners, "-", 1) '
-                else:
-                    srt += (key+" ")
-                if sortingdict[key][1] == 0:
-                    srt += "ASC "
-                else:
-                    srt += "DESC "
-                continue
+    cnt = 0
+    for key in sortingdict.keys():
+        if key == "name":
+            continue
+        if sortingdict[key][0] == 1:
+            cnt = 1
+            nxt = True
+            if key == "pratio":
+                srt += "CASE positive_ratings + negative_ratings\
+                    WHEN 0 THEN 0 ELSE positive_ratings/(positive_ratings + negative_ratings) END "
+            elif key == "owners":
+                srt += 'SUBSTRING_INDEX(owners, "-", 1) '
+            else:
+                srt += (key+" ")
+            if sortingdict[key][1] == 0:
+                srt += "ASC "
+            else:
+                srt += "DESC "
+            break
+    if cnt == 1:
+        srt += ", "
+    srt += "name "
+    if sortingdict["name"][1] == 1:
+        srt += "DESC "
+    else:
+        srt += "ASC "
     i = 0
     while i < len(applist):
         scorelist = []
@@ -513,9 +505,7 @@ def searchByTag(taglist: list) -> list:
             s = "("+str(scorelist[0])+")"
         else:
             s = str(tuple(scorelist))
-        sql_command = "SELECT appid FROM steam_basic_data WHERE appid IN "+s+" "
-        if j > 1:
-            sql_command += srt
+        sql_command = "SELECT appid FROM steam_basic_data WHERE appid IN "+s+" "+ srt
         mycursor.execute(sql_command)
         results = mycursor.fetchall()
         mycursor.reset()
@@ -579,31 +569,34 @@ def searchByRange() -> list:
     if use == 0:
         return []
     srt = "ORDER BY "
-    j = 1
-    nxt = True
-    while nxt:
-        nxt = False
-        for key in sortingdict.keys():
-            if sortingdict[key][0] == j:
-                if j > 1:
-                    srt += ','
-                j += 1
-                nxt = True
-                if key == "pratio":
-                    srt += "CASE positive_ratings + negative_ratings\
-                        WHEN 0 THEN 0 ELSE positive_ratings/(positive_ratings + negative_ratings) END "
-                elif key == "owners":
-                    srt += 'SUBSTRING_INDEX(owners, "-", 1) '
-                else:
-                    srt += (key+" ")
-                if sortingdict[key][1] == 0:
-                    srt += "ASC "
-                else:
-                    srt += "DESC "
-                continue
+    cnt2 = 0
+    for key in sortingdict.keys():
+        if key == "name":
+            continue
+        if sortingdict[key][0] == 1:
+            cnt2 = 1
+            nxt = True
+            if key == "pratio":
+                srt += "CASE positive_ratings + negative_ratings\
+                    WHEN 0 THEN 0 ELSE positive_ratings/(positive_ratings + negative_ratings) END "
+            elif key == "owners":
+                srt += 'SUBSTRING_INDEX(owners, "-", 1) '
+            else:
+                srt += (key+" ")
+            if sortingdict[key][1] == 0:
+                srt += "ASC "
+            else:
+                srt += "DESC "
+            break
+    if cnt2 == 1:
+        srt += ", "
+    srt += "name "
+    if sortingdict["name"][1] == 1:
+        srt += "DESC "
+    else:
+        srt += "ASC "
     sql_command += condiction
-    if j > 1:
-        sql_command += srt
+    sql_command += srt
     mycursor.execute(sql_command)
     results = mycursor.fetchall()
     mycursor.reset()
@@ -642,28 +635,31 @@ def searchByName(wordlist: list) -> list:
     applist = sorted(appdict.items(), key = lambda x:(x[1],x[0]), reverse=True)
     finallist = []
     srt = "ORDER BY "
-    j = 1
-    nxt = True
-    while nxt:
-        nxt = False
-        for key in sortingdict.keys():
-            if sortingdict[key][0] == j:
-                if j > 1:
-                    srt += ','
-                j += 1
-                nxt = True
-                if key == "pratio":
-                    srt += "CASE positive_ratings + negative_ratings\
-                        WHEN 0 THEN 0 ELSE positive_ratings/(positive_ratings + negative_ratings) END "
-                elif key == "owners":
-                    srt += 'SUBSTRING_INDEX(owners, "-", 1) '
-                else:
-                    srt += (key+" ")
-                if sortingdict[key][1] == 0:
-                    srt += "ASC "
-                else:
-                    srt += "DESC "
-                continue
+    cnt = 0
+    for key in sortingdict.keys():
+        if key == "name":
+            continue
+        if sortingdict[key][0] == 1:
+            cnt = 1
+            if key == "pratio":
+                srt += "CASE positive_ratings + negative_ratings\
+                    WHEN 0 THEN 0 ELSE positive_ratings/(positive_ratings + negative_ratings) END "
+            elif key == "owners":
+                srt += 'SUBSTRING_INDEX(owners, "-", 1) '
+            else:
+                srt += (key+" ")
+            if sortingdict[key][1] == 0:
+                srt += "ASC "
+            else:
+                srt += "DESC "
+            break
+    if cnt == 1:
+        srt += ", "
+    srt += "name "
+    if sortingdict["name"][1] == 1:
+        srt += "DESC "
+    else:
+        srt += "ASC "
     i = 0
     while i < len(applist):
         scorelist = []
@@ -677,9 +673,7 @@ def searchByName(wordlist: list) -> list:
             s = "("+str(scorelist[0])+")"
         else:
             s = str(tuple(scorelist))
-        sql_command = "SELECT appid FROM steam_basic_data WHERE appid IN "+s+" "
-        if j > 1:
-            sql_command += srt
+        sql_command = "SELECT appid FROM steam_basic_data WHERE appid IN "+s+" "+ srt
         mycursor.execute(sql_command)
         results = mycursor.fetchall()
         mycursor.reset()
@@ -696,8 +690,8 @@ def takePage(p: int, mylist: list) -> list:
 #testing code
 
 uid = createUserAccount("A","0800000123")
-renameUserAccount(uid, "0800000123", "B")
-resetUserPassword(uid, "0800000123", "1911111234")
+renameUserAccount(uid, "B")
+resetUserPassword(uid, "1911111234")
 uid = createUserAccount("A","0800000123")
 lid = createFList(str(uid),"MiHoYo")
 insertAppIntoFList(1610, lid)
@@ -733,3 +727,4 @@ searchResult = searchByName(["neko"])
 for info in appShortInfo(takePage(1, searchResult)).values():
     print(info)
 """
+
