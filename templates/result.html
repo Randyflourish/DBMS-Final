@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <title>Steam Wishlist</title>
+</head>
+
+<body>
+
+    <nav>
+        <div>
+            {% if user_id == 0 or user_id == "0" or user_id[0]=='-' %}
+            <a onclick="ShowBlock('login')"><img src="{{ url_for('static', filename='icon/profile.png') }}"></a>
+            <div id="login" class="modal">
+                <form class="modal-content animate" action="{{ url_for('sign') }}" method="post">
+                    <div class="titlecontainer">
+                        <h1>Log In</h1>
+                        <span onclick="CloseBlock('login')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="uname"><b>Username</b></label>
+                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit">Log In</button>
+                        <button class="login_button" type="button"
+                            onclick="CloseBlock('login');ShowBlock('signup')">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+            <div id="signup" class="modal">
+                <form class="modal-content animate" action="{{ url_for('regist') }}" method="post">
+                    <div class="titlecontainer">
+                        <h1>Sign Up</h1>
+                        <span onclick="CloseBlock('signup')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="uname"><b>Username</b></label>
+                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit">Sign up</button>
+                    </div>
+                </form>
+            </div>
+            {% elif user_id[0] != '-' %}
+            <a onclick="ShowBlock('selection')"><img src="{{ url_for('static', filename='icon/profile.png') }}"></a>
+            <div id="selection" class="modal">
+                <div class="modal-content animate">
+                    <div class="titlecontainer">
+                        <span onclick="CloseBlock('selection')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <button class="login_button" type="button"
+                            onclick="ShowBlock('changeinformation');CloseBlock('selection')">Change account
+                            information</button>
+                        <button class="login_button" type="button"
+                            onclick="ShowBlock('deleteaccount');CloseBlock('selection')">Delete account</button>
+                        <form action="{{ url_for('logout') }}" method="post">
+                            <button class="login_button" type="submit" onclick="CloseBlock('selection')">Log
+                                out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="changeinformation" class="modal">
+                <form class="modal-content animate" action="{{ url_for('changeUser', user_id = user_id) }}"
+                    method="post">
+                    <div class="titlecontainer">
+                        <h1>Change information</h1>
+                        <span onclick="CloseBlock('changeinformation')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="uname"><b>Username</b></label>
+                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit">Change</button>
+                    </div>
+                </form>
+            </div>
+            <div id="deleteaccount" class="modal">
+                <form class="modal-content animate" action="{{ url_for('deleteUser', user_id = user_id) }}"
+                    method="post">
+                    <div class="titlecontainer">
+                        <h1>Change information</h1>
+                        <span onclick="CloseBlock('deleteaccount')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit" style="background-color: red;">Delete
+                            Account</button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+            {% if user_id == 0 or user_id == "0" or user_id[0]=='-' %}
+            <a onclick="ShowBlock('favorite')"><img src="{{ url_for('static', filename='icon/heart.png') }}"></a>
+            <div id="favorite" class="modal">
+                <form class="modal-content animate">
+                    <div class="titlecontainer">
+                        <h1>Alert</h1>
+                        <span onclick="CloseBlock('favorite')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label style="text-align: center;font-size: 22px;"><b>You have not logged in
+                                yet.</b></label>
+                    </div>
+                </form>
+            </div>
+            {% elif user_id[0] != '-' %}
+            <a href="{{ url_for('favorite', user_id = user_id, page = 1) }}">
+                <img src="{{ url_for('static', filename='icon/heart.png') }}">
+            </a>
+            {% endif %}
+        </div>
+
+        <form class="search" action="{{ url_for('searchName', user_id = user_id, page = 1) }}" method="post">
+            <input type="text" id="search" name="search" class="search_input">&nbsp;
+            <button type="submit" class="search_button">Search</button>
+
+            <a onclick="ShowBlock('sort')"><img src="{{ url_for('static', filename='icon/sort.png') }}"></a>
+            <div id="sort" class="modal">
+                <div class="modal-content animate">
+                    <div class="titlecontainer">
+                        <h1>Sort</h1>
+                        <span onclick="CloseBlock('sort')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container" style="display: inline-block;">
+                        <h3>Condition</h3>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="name" name="condition" value="name" checked>
+                            <label for="name"><b>Name</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="date" name="condition" value="release_date">
+                            <label for="date"><b>Date</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="pratio" name="condition" value="pratio">
+                            <label for="pratio"><b>Pratio</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="prating" name="condition"
+                                value="positive_ratings">
+                            <label for="prating"><b>Prating</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="owners" name="condition" value="owners">
+                            <label for="owners"><b>Owners</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="Price" name="condition" value="price">
+                            <label for="Price"><b>Price</b></label>
+                        </div>
+
+                        <h3>Order</h3>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="order" name="order" value="Order" checked>
+                            <label for="order"><b>Order</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="reverseorder" name="order" value="ROrder">
+                            <label for="reverseorder"><b>Reverse Order</b></label>
+
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="noorder" name="order" value="NOrder">
+                            <label for="noorder"><b>No Order</b></label>
+                        </div>
+                        <br>
+                        <button class="login_button" type="button" onclick="CloseBlock('sort')">OK</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </form>
+        </div>
+        <a href="{{ url_for('tag', user_id = user_id) }}"><img
+                src="{{ url_for('static', filename='icon/search.png') }}"></a>
+        </div>
+    </nav>
+    <br>
+    <div style="text-align: center;">
+        {% if addResult == 0 or addResult == "0" %}
+        <h2>
+            尚未登入，請先登入。
+        </h2>
+        {% elif addResult == 1 or addResult == "1" %}
+        <h2>
+            添加成功。
+        </h2>
+        {% elif addResult == -1 or addResult == "-1" %}
+        <h2>
+            添加失敗，此遊戲已經在願望清單中。
+        </h2>
+        {% else %}
+        {% endif %}
+    </div>
+    <div class="gamelist">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>好評率</th>
+                <th>好評數</th>
+                <th>遊玩人數</th>
+                <th>價格</th>
+                <th>新增至願望清單</th>
+            </tr>
+            {% if result != None %}
+            {% for k, v in result.items() %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('gameInfo', user_id = user_id, game_id = k) }}" target="_blank">
+                        {{ v["name"] }}
+                    </a>
+                </td>
+                <td>{{ v["date"] }}</td>
+                <td>{{ v["pratiopct"] }}</td>
+                <td>{{ v["pratings"] }}</td>
+                <td>{{ v["owners"] }}</td>
+                <td>{{ v["price"] }}</td>
+                <td>
+                    <form
+                        action="{{ url_for('addGame', user_id = user_id, game_id = k, searchWay = searchWay, search = keyword, page = page) }}"
+                        method="post">
+                        <button class="wishlist_button" type="submit">
+                            Add to Wishlist
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+    <div class="turnpage">
+        {% if searchWay == "Name" %}
+        <form action="{{ url_for('searchName', user_id = user_id, page = page - 1, search = keyword, addResult = -2) }}"
+            method="post">
+            <div style="float: left;">
+                <button type="submit" class="page-button">Previous Page</button>
+            </div>
+        </form>
+        <form action="{{ url_for('searchName', user_id = user_id, page = page + 1, search = keyword, addResult = -2) }}"
+            method="post">
+            &nbsp;&nbsp;
+            <div style="float: right;">
+                <button type="submit" class="page-button">Next Page</button>
+            </div>
+        </form>
+        {% elif searchWay == "Tag" %}
+        <form action="{{ url_for('searchTag', user_id = user_id, page = page - 1, search = keyword, addResult = -2) }}"
+            method="post">
+            <div style="float: left;">
+                <button type="submit" class="page-button">Previous Page</button>
+            </div>
+        </form>
+        <form action="{{ url_for('searchTag', user_id = user_id, page = page + 1, search = keyword, addResult = -2) }}"
+            method="post">
+            &nbsp;&nbsp;
+            <div style="float: right;">
+                <button type="submit" class="page-button">Next Page</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+
+
+</body>
+
+</html>

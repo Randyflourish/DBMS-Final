@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <title>Steam Wishlist</title>
+</head>
+
+<body>
+
+    <nav>
+        <div>
+            {% if user_id == 0 or user_id == "0" or user_id[0]=='-' %}
+            <a onclick="ShowBlock('login')"><img src="{{ url_for('static', filename='icon/profile.png') }}"></a>
+            <div id="login" class="modal">
+                <form class="modal-content animate" action="{{ url_for('sign') }}" method="post">
+                    <div class="titlecontainer">
+                        <h1>Log In</h1>
+                        <span onclick="CloseBlock('login')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="uname"><b>Username</b></label>
+                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit">Log In</button>
+                        <button class="login_button" type="button"
+                            onclick="CloseBlock('login');ShowBlock('signup')">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+            <div id="signup" class="modal">
+                <form class="modal-content animate" action="{{ url_for('regist') }}" method="post">
+                    <div class="titlecontainer">
+                        <h1>Sign Up</h1>
+                        <span onclick="CloseBlock('signup')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="uname"><b>Username</b></label>
+                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit">Sign up</button>
+                    </div>
+                </form>
+            </div>
+            {% elif user_id[0] != '-' %}
+            <a onclick="ShowBlock('selection')"><img src="{{ url_for('static', filename='icon/profile.png') }}"></a>
+            <div id="selection" class="modal">
+                <div class="modal-content animate">
+                    <div class="titlecontainer">
+                        <span onclick="CloseBlock('selection')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <button class="login_button" type="button"
+                            onclick="ShowBlock('changeinformation');CloseBlock('selection')">Change account
+                            information</button>
+                        <button class="login_button" type="button"
+                            onclick="ShowBlock('deleteaccount');CloseBlock('selection')">Delete account</button>
+                        <form action="{{ url_for('logout') }}" method="post">
+                            <button class="login_button" type="submit" onclick="CloseBlock('selection')">Log
+                                out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="changeinformation" class="modal">
+                <form class="modal-content animate" action="{{ url_for('changeUser', user_id = user_id) }}"
+                    method="post">
+                    <div class="titlecontainer">
+                        <h1>Change information</h1>
+                        <span onclick="CloseBlock('changeinformation')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="uname"><b>Username</b></label>
+                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit">Change</button>
+                    </div>
+                </form>
+            </div>
+            <div id="deleteaccount" class="modal">
+                <form class="modal-content animate" action="{{ url_for('deleteUser', user_id = user_id) }}"
+                    method="post">
+                    <div class="titlecontainer">
+                        <h1>Change information</h1>
+                        <span onclick="CloseBlock('deleteaccount')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit" style="background-color: red;">Delete
+                            Account</button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+            {% if user_id == 0 or user_id == "0" or user_id[0]=='-' %}
+            <a onclick="ShowBlock('favorite')"><img src="{{ url_for('static', filename='icon/heart.png') }}"></a>
+            <div id="favorite" class="modal">
+                <form class="modal-content animate">
+                    <div class="titlecontainer">
+                        <h1>Alert</h1>
+                        <span onclick="CloseBlock('favorite')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label style="text-align: center;font-size: 22px;"><b>You have not logged in
+                                yet.</b></label>
+                    </div>
+                </form>
+            </div>
+            {% elif user_id[0] != '-' %}
+            <a href="{{ url_for('favorite', user_id = user_id, page = 1) }}">
+                <img src="{{ url_for('static', filename='icon/heart.png') }}">
+            </a>
+            {% endif %}
+        </div>
+
+        <div>
+            <a
+                href="{{ url_for('addGame', user_id = user_id, game_id = game_id, searchWay = 'Detail', keyword = keyword, page = 0) }}">
+                <img src="{{ url_for('static', filename='icon/add.png') }}">
+            </a>
+            <a href="{{ url_for('index', user_id = user_id) }}"><img src="{{ url_for('static'
+                , filename='icon/home.png') }}"></a>
+        </div>
+    </nav>
+    <br>
+    <div style="text-align: center;">
+
+        {% if addResult == 0 or addResult == "0" %}
+        <h2>
+            尚未登入，請先登入。
+        </h2>
+        {% elif addResult == 1 or addResult == "1" %}
+        <h2>
+            添加成功。
+        </h2>
+        {% elif addResult == -1 or addResult == "-1" %}
+        <h2>
+            添加失敗，此遊戲已經在願望清單中。
+        </h2>
+        {% else %}
+        {% endif %}
+
+    </div>
+    <div class="wishlist">
+        <table>
+            <tr>
+                <th colspan="2" rowspan="4">
+                    <img style="width: 400px;" src="{{ game_info['headimg'] }}">
+                </th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Categories</th>
+                <th>Genres</th>
+                <th>Tags</th>
+            </tr>
+            <tr>
+                <td>{{ game_info["name"] }}</td>
+                <td>{{ game_info["price"] }}</td>
+                <td>{{ game_info["categories"] }}</td>
+                <td>{{ game_info["genres"] }}</td>
+                <td>{{ game_info["tags"] }}</td>
+            </tr>
+            <tr>
+
+                <th>好評數</th>
+                <th>好評率</th>
+                <th>持有人數</th>
+                <th>平均遊玩時間</th>
+                <th>中位遊玩時間</th>
+            </tr>
+            <tr>
+                <td>{{ game_info["pratings"] }}</td>
+                <td>{{ game_info["pratiopct"] }}</td>
+                <td>{{ game_info["owners"] }}</td>
+                <td>{{ game_info["avetime"] }}</td>
+                <td>{{ game_info["medtime"] }}</td>
+            </tr>
+            <tr>
+                <th colspan="2">支援系統平台</th>
+                <th>發布日期</th>
+                <th>開發商</th>
+                <th>出版商</th>
+                <th>年齡</th>
+                <th>詳細介紹</th>
+            </tr>
+            <tr>
+                <td colspan="2">{{ game_info["platforms"] }}</td>
+                <td>{{ game_info["date"] }}</td>
+                <td>{{ game_info["developer"] }}</td>
+                <td>{{ game_info["publisher"] }}</td>
+                <td>{{ game_info["age"] }}</td>
+                <td>
+                    <textarea>
+                        {{ game_info["desc"] }}
+                    </textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+
+</body>
+
+</html>

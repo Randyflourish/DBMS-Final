@@ -1,0 +1,2101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <title>Steam Wishlist</title>
+</head>
+
+<body>
+
+    <nav>
+        <div>
+            {% if user_id == 0 or user_id == "0" or user_id[0]=='-' %}
+            <a onclick="ShowBlock('login')"><img src="{{ url_for('static', filename='icon/profile.png') }}"></a>
+            <div id="login" class="modal">
+                <form class="modal-content animate" action="{{ url_for('sign') }}" method="post">
+                    <div class="titlecontainer">
+                        <h1>Log In</h1>
+                        <span onclick="CloseBlock('login')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="uname"><b>Username</b></label>
+                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit">Log In</button>
+                        <button class="login_button" type="button"
+                            onclick="CloseBlock('login');ShowBlock('signup')">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+            <div id="signup" class="modal">
+                <form class="modal-content animate" action="{{ url_for('regist') }}" method="post">
+                    <div class="titlecontainer">
+                        <h1>Sign Up</h1>
+                        <span onclick="CloseBlock('signup')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="uname"><b>Username</b></label>
+                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit">Sign up</button>
+                    </div>
+                </form>
+            </div>
+            {% elif user_id[0] != '-' %}
+            <a onclick="ShowBlock('selection')"><img src="{{ url_for('static', filename='icon/profile.png') }}"></a>
+            <div id="selection" class="modal">
+                <div class="modal-content animate">
+                    <div class="titlecontainer">
+                        <span onclick="CloseBlock('selection')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <button class="login_button" type="button"
+                            onclick="ShowBlock('changeinformation');CloseBlock('selection')">Change account
+                            information</button>
+                        <button class="login_button" type="button"
+                            onclick="ShowBlock('deleteaccount');CloseBlock('selection')">Delete account</button>
+                        <form action="{{ url_for('logout') }}" method="post">
+                            <button class="login_button" type="submit" onclick="CloseBlock('selection')">Log
+                                out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="changeinformation" class="modal">
+                <form class="modal-content animate" action="{{ url_for('changeUser', user_id = user_id) }}"
+                    method="post">
+                    <div class="titlecontainer">
+                        <h1>Change information</h1>
+                        <span onclick="CloseBlock('changeinformation')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="uname"><b>Username</b></label>
+                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit">Change</button>
+                    </div>
+                </form>
+            </div>
+            <div id="deleteaccount" class="modal">
+                <form class="modal-content animate" action="{{ url_for('deleteUser', user_id = user_id) }}"
+                    method="post">
+                    <div class="titlecontainer">
+                        <h1>Change information</h1>
+                        <span onclick="CloseBlock('deleteaccount')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="psw" required>
+                        <button class="login_button" type="submit" style="background-color: red;">Delete
+                            Account</button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+            {% if user_id == 0 or user_id == "0" or user_id[0]=='-' %}
+            <a onclick="ShowBlock('favorite')"><img src="{{ url_for('static', filename='icon/heart.png') }}"></a>
+            <div id="favorite" class="modal">
+                <form class="modal-content animate">
+                    <div class="titlecontainer">
+                        <h1>Alert</h1>
+                        <span onclick="CloseBlock('favorite')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container">
+                        <label style="text-align: center;font-size: 22px;"><b>You have not logged in
+                                yet.</b></label>
+                    </div>
+                </form>
+            </div>
+            {% elif user_id[0] != '-' %}
+            <a href="{{ url_for('favorite', user_id = user_id, page = 1) }}">
+                <img src="{{ url_for('static', filename='icon/heart.png') }}">
+            </a>
+            {% endif %}
+        </div>
+        <div>
+            <a href="{{ url_for('index', user_id = user_id) }}"><img
+                    src="{{ url_for('static', filename='icon/home.png') }}">
+            </a>
+        </div>
+    </nav>
+    <form id="tagsform" action="{{ url_for('searchTag', user_id = user_id, page = 1, addResult = -2) }}.html"
+        method="post">
+        <nav style="background-color: rgb(196, 183, 183);">
+            <a onclick="ShowBlock('sort')"><img src="{{ url_for('static', filename='icon/sort.png') }}"></a>
+            <div id="sort" class="modal">
+                <div class="modal-content animate">
+                    <div class="titlecontainer">
+                        <h1>Sort</h1>
+                        <span onclick="CloseBlock('sort')" class="close" title="Close">&times;</span>
+                    </div>
+                    <div class="container" style="display: inline-block;">
+                        <h3>Condition</h3>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="name" name="condition" value="name" checked>
+                            <label for="name"><b>Name</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="date" name="condition" value="release_date">
+                            <label for="date"><b>Date</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="pratio" name="condition" value="pratio">
+                            <label for="pratio"><b>Pratio</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="prating" name="condition"
+                                value="positive_ratings">
+                            <label for="prating"><b>prating</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="owners" name="condition" value="owners">
+                            <label for="owners"><b>Owners</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="Price" name="condition" value="price">
+                            <label for="Price"><b>Price</b></label>
+                        </div>
+
+                        <h3>Order</h3>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="order" name="order" value="Order" checked>
+                            <label for="order"><b>Order</b></label>
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="reverseorder" name="order" value="ROrder">
+                            <label for="reverseorder"><b>Reverse Order</b></label>
+
+                        </div>
+                        <div class="radio-item">
+                            <input class="login_input" type="radio" id="noorder" name="order" value="NOrder">
+                            <label for="noorder"><b>No Order</b></label>
+                        </div>
+                        <br>
+                        <button class="login_button" type="button" onclick="CloseBlock('sort')">OK</button>
+                    </div>
+                </div>
+            </div>
+            <a onclick="document.getElementById('tagsform').submit()"><img
+                    src="{{ url_for('static', filename='icon/search.png') }}"></a>
+        </nav>
+        <br>
+        <div class="taglist">
+
+            <table>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="Action" name="tags" value="Action">
+                        <label for="Action">Action</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Free to Play" name="tags" value="Free to Play">
+                        <label for="Free to Play">Free to Play</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Strategy" name="tags" value="Strategy">
+                        <label for="Strategy">Strategy</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Adventure" name="tags" value="Adventure">
+                        <label for="Adventure">Adventure</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Indie" name="tags" value="Indie">
+                        <label for="Indie">Indie</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="RPG" name="tags" value="RPG">
+                        <label for="RPG">RPG</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Animation & Modeling" name="tags" value="Animation & Modeling">
+                        <label for="Animation & Modeling">Animation & Modeling</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Video Production" name="tags" value="Video Production">
+                        <label for="Video Production">Video Production</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Casual" name="tags" value="Casual">
+                        <label for="Casual">Casual</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Simulation" name="tags" value="Simulation">
+                        <label for="Simulation">Simulation</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="Racing" name="tags" value="Racing">
+                        <label for="Racing">Racing</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Violent" name="tags" value="Violent">
+                        <label for="Violent">Violent</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Massively Multiplayer" name="tags" value="Massively Multiplayer">
+                        <label for="Massively Multiplayer">Massively Multiplayer</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Nudity" name="tags" value="Nudity">
+                        <label for="Nudity">Nudity</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Sports" name="tags" value="Sports">
+                        <label for="Sports">Sports</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="Early Access" name="tags" value="Early Access">
+                        <label for="Early Access">Early Access</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Gore" name="tags" value="Gore">
+                        <label for="Gore">Gore</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Utilities" name="tags" value="Utilities">
+                        <label for="Utilities">Utilities</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Design & Illustration" name="tags" value="Design & Illustration">
+                        <label for="Design & Illustration">Design & Illustration</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Web Publishing" name="tags" value="Web Publishing">
+                        <label for="Web Publishing">Web Publishing</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="Education" name="tags" value="Education">
+                        <label for="Education">Education</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Software Training" name="tags" value="Software Training">
+                        <label for="Software Training">Software Training</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Sexual Content" name="tags" value="Sexual Content">
+                        <label for="Sexual Content">Sexual Content</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Audio Production" name="tags" value="Audio Production">
+                        <label for="Audio Production">Audio Production</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Game Development" name="tags" value="Game Development">
+                        <label for="Game Development">Game Development</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="Photo Editing" name="tags" value="Photo Editing">
+                        <label for="Photo Editing">Photo Editing</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Accounting" name="tags" value="Accounting">
+                        <label for="Accounting">Accounting</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Documentary" name="tags" value="Documentary">
+                        <label for="Documentary">Documentary</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Tutorial" name="tags" value="Tutorial">
+                        <label for="Tutorial">Tutorial</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Multi-player" name="tags" value="Multi-player">
+                        <label for="Multi-player">Multi-player</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="Online Multi-Player" name="tags" value="Online Multi-Player">
+                        <label for="Online Multi-Player">Online Multi-Player</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Local Multi-Player" name="tags" value="Local Multi-Player">
+                        <label for="Local Multi-Player">Local Multi-Player</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Valve Anti-Cheat enabled" name="tags"
+                            value="Valve Anti-Cheat enabled">
+                        <label for="Valve Anti-Cheat enabled">Valve Anti-Cheat enabled</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Single-player" name="tags" value="Single-player">
+                        <label for="Single-player">Single-player</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Steam Cloud" name="tags" value="Steam Cloud">
+                        <label for="Steam Cloud">Steam Cloud</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="Steam Achievements" name="tags" value="Steam Achievements">
+                        <label for="Steam Achievements">Steam Achievements</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Steam Trading Cards" name="tags" value="Steam Trading Cards">
+                        <label for="Steam Trading Cards">Steam Trading Cards</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Captions available" name="tags" value="Captions available">
+                        <label for="Captions available">Captions available</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Partial Controller Support" name="tags"
+                            value="Partial Controller Support">
+                        <label for="Partial Controller Support">Partial Controller Support</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Includes Source SDK" name="tags" value="Includes Source SDK">
+                        <label for="Includes Source SDK">Includes Source SDK</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="Cross-Platform Multiplayer" name="tags"
+                            value="Cross-Platform Multiplayer">
+                        <label for="Cross-Platform Multiplayer">Cross-Platform Multiplayer</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Stats" name="tags" value="Stats">
+                        <label for="Stats">Stats</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Commentary available" name="tags" value="Commentary available">
+                        <label for="Commentary available">Commentary available</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Includes level editor" name="tags" value="Includes level editor">
+                        <label for="Includes level editor">Includes level editor</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Steam Workshop" name="tags" value="Steam Workshop">
+                        <label for="Steam Workshop">Steam Workshop</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="In-App Purchases" name="tags" value="In-App Purchases">
+                        <label for="In-App Purchases">In-App Purchases</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Co-op" name="tags" value="Co-op">
+                        <label for="Co-op">Co-op</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Full controller support" name="tags" value="Full controller support">
+                        <label for="Full controller support">Full controller support</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Steam Leaderboards" name="tags" value="Steam Leaderboards">
+                        <label for="Steam Leaderboards">Steam Leaderboards</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="SteamVR Collectibles" name="tags" value="SteamVR Collectibles">
+                        <label for="SteamVR Collectibles">SteamVR Collectibles</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="Online Co-op" name="tags" value="Online Co-op">
+                        <label for="Online Co-op">Online Co-op</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Shared/Split Screen" name="tags" value="Shared/Split Screen">
+                        <label for="Shared/Split Screen">Shared/Split Screen</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Local Co-op" name="tags" value="Local Co-op">
+                        <label for="Local Co-op">Local Co-op</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="MMO" name="tags" value="MMO">
+                        <label for="MMO">MMO</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="VR Support" name="tags" value="VR Support">
+                        <label for="VR Support">VR Support</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="Mods" name="tags" value="Mods">
+                        <label for="Mods">Mods</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Mods (require HL2)" name="tags" value="Mods (require HL2)">
+                        <label for="Mods (require HL2)">Mods (require HL2)</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="Steam Turn Notifications" name="tags"
+                            value="Steam Turn Notifications">
+                        <label for="Steam Turn Notifications">Steam Turn Notifications</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="appid" name="tags" value="appid">
+                        <label for="appid">appid</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="1980s" name="tags" value="1980s">
+                        <label for="1980s">1980s</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="1990s" name="tags" value="1990s">
+                        <label for="1990s">1990s</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="2.5d" name="tags" value="2.5d">
+                        <label for="2.5d">2.5d</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="2d" name="tags" value="2d">
+                        <label for="2d">2d</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="2d_fighter" name="tags" value="2d_fighter">
+                        <label for="2d_fighter">2d_fighter</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="360_video" name="tags" value="360_video">
+                        <label for="360_video">360_video</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="3d" name="tags" value="3d">
+                        <label for="3d">3d</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="3d_platformer" name="tags" value="3d_platformer">
+                        <label for="3d_platformer">3d_platformer</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="3d_vision" name="tags" value="3d_vision">
+                        <label for="3d_vision">3d_vision</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="4_player_local" name="tags" value="4_player_local">
+                        <label for="4_player_local">4_player_local</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="4x" name="tags" value="4x">
+                        <label for="4x">4x</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="6dof" name="tags" value="6dof">
+                        <label for="6dof">6dof</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="atv" name="tags" value="atv">
+                        <label for="atv">atv</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="abstract" name="tags" value="abstract">
+                        <label for="abstract">abstract</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="action" name="tags" value="action">
+                        <label for="action">action</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="action_rpg" name="tags" value="action_rpg">
+                        <label for="action_rpg">action_rpg</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="action_adventure" name="tags" value="action_adventure">
+                        <label for="action_adventure">action_adventure</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="addictive" name="tags" value="addictive">
+                        <label for="addictive">addictive</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="adventure" name="tags" value="adventure">
+                        <label for="adventure">adventure</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="agriculture" name="tags" value="agriculture">
+                        <label for="agriculture">agriculture</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="aliens" name="tags" value="aliens">
+                        <label for="aliens">aliens</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="alternate_history" name="tags" value="alternate_history">
+                        <label for="alternate_history">alternate_history</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="america" name="tags" value="america">
+                        <label for="america">america</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="animation_&_modeling" name="tags" value="animation_&_modeling">
+                        <label for="animation_&_modeling">animation_&_modeling</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="anime" name="tags" value="anime">
+                        <label for="anime">anime</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="arcade" name="tags" value="arcade">
+                        <label for="arcade">arcade</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="arena_shooter" name="tags" value="arena_shooter">
+                        <label for="arena_shooter">arena_shooter</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="artificial_intelligence" name="tags" value="artificial_intelligence">
+                        <label for="artificial_intelligence">artificial_intelligence</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="assassin" name="tags" value="assassin">
+                        <label for="assassin">assassin</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="asynchronous_multiplayer" name="tags"
+                            value="asynchronous_multiplayer">
+                        <label for="asynchronous_multiplayer">asynchronous_multiplayer</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="atmospheric" name="tags" value="atmospheric">
+                        <label for="atmospheric">atmospheric</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="audio_production" name="tags" value="audio_production">
+                        <label for="audio_production">audio_production</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="bmx" name="tags" value="bmx">
+                        <label for="bmx">bmx</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="base_building" name="tags" value="base_building">
+                        <label for="base_building">base_building</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="baseball" name="tags" value="baseball">
+                        <label for="baseball">baseball</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="based_on_a_novel" name="tags" value="based_on_a_novel">
+                        <label for="based_on_a_novel">based_on_a_novel</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="basketball" name="tags" value="basketball">
+                        <label for="basketball">basketball</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="batman" name="tags" value="batman">
+                        <label for="batman">batman</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="battle_royale" name="tags" value="battle_royale">
+                        <label for="battle_royale">battle_royale</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="beat_em_up" name="tags" value="beat_em_up">
+                        <label for="beat_em_up">beat_em_up</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="beautiful" name="tags" value="beautiful">
+                        <label for="beautiful">beautiful</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="benchmark" name="tags" value="benchmark">
+                        <label for="benchmark">benchmark</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="bikes" name="tags" value="bikes">
+                        <label for="bikes">bikes</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="blood" name="tags" value="blood">
+                        <label for="blood">blood</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="board_game" name="tags" value="board_game">
+                        <label for="board_game">board_game</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="bowling" name="tags" value="bowling">
+                        <label for="bowling">bowling</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="building" name="tags" value="building">
+                        <label for="building">building</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="bullet_hell" name="tags" value="bullet_hell">
+                        <label for="bullet_hell">bullet_hell</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="bullet_time" name="tags" value="bullet_time">
+                        <label for="bullet_time">bullet_time</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="crpg" name="tags" value="crpg">
+                        <label for="crpg">crpg</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="capitalism" name="tags" value="capitalism">
+                        <label for="capitalism">capitalism</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="card_game" name="tags" value="card_game">
+                        <label for="card_game">card_game</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="cartoon" name="tags" value="cartoon">
+                        <label for="cartoon">cartoon</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="cartoony" name="tags" value="cartoony">
+                        <label for="cartoony">cartoony</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="casual" name="tags" value="casual">
+                        <label for="casual">casual</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="cats" name="tags" value="cats">
+                        <label for="cats">cats</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="character_action_game" name="tags" value="character_action_game">
+                        <label for="character_action_game">character_action_game</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="character_customization" name="tags" value="character_customization">
+                        <label for="character_customization">character_customization</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="chess" name="tags" value="chess">
+                        <label for="chess">chess</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="choices_matter" name="tags" value="choices_matter">
+                        <label for="choices_matter">choices_matter</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="choose_your_own_adventure" name="tags"
+                            value="choose_your_own_adventure">
+                        <label for="choose_your_own_adventure">choose_your_own_adventure</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="cinematic" name="tags" value="cinematic">
+                        <label for="cinematic">cinematic</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="city_builder" name="tags" value="city_builder">
+                        <label for="city_builder">city_builder</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="class_based" name="tags" value="class_based">
+                        <label for="class_based">class_based</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="classic" name="tags" value="classic">
+                        <label for="classic">classic</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="clicker" name="tags" value="clicker">
+                        <label for="clicker">clicker</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="co_op" name="tags" value="co_op">
+                        <label for="co_op">co_op</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="co_op_campaign" name="tags" value="co_op_campaign">
+                        <label for="co_op_campaign">co_op_campaign</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="cold_war" name="tags" value="cold_war">
+                        <label for="cold_war">cold_war</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="colorful" name="tags" value="colorful">
+                        <label for="colorful">colorful</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="comedy" name="tags" value="comedy">
+                        <label for="comedy">comedy</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="comic_book" name="tags" value="comic_book">
+                        <label for="comic_book">comic_book</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="competitive" name="tags" value="competitive">
+                        <label for="competitive">competitive</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="conspiracy" name="tags" value="conspiracy">
+                        <label for="conspiracy">conspiracy</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="controller" name="tags" value="controller">
+                        <label for="controller">controller</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="conversation" name="tags" value="conversation">
+                        <label for="conversation">conversation</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="crafting" name="tags" value="crafting">
+                        <label for="crafting">crafting</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="crime" name="tags" value="crime">
+                        <label for="crime">crime</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="crowdfunded" name="tags" value="crowdfunded">
+                        <label for="crowdfunded">crowdfunded</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="cult_classic" name="tags" value="cult_classic">
+                        <label for="cult_classic">cult_classic</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="cute" name="tags" value="cute">
+                        <label for="cute">cute</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="cyberpunk" name="tags" value="cyberpunk">
+                        <label for="cyberpunk">cyberpunk</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="cycling" name="tags" value="cycling">
+                        <label for="cycling">cycling</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="dark" name="tags" value="dark">
+                        <label for="dark">dark</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="dark_comedy" name="tags" value="dark_comedy">
+                        <label for="dark_comedy">dark_comedy</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="dark_fantasy" name="tags" value="dark_fantasy">
+                        <label for="dark_fantasy">dark_fantasy</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="dark_humor" name="tags" value="dark_humor">
+                        <label for="dark_humor">dark_humor</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="dating_sim" name="tags" value="dating_sim">
+                        <label for="dating_sim">dating_sim</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="demons" name="tags" value="demons">
+                        <label for="demons">demons</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="design_&_illustration" name="tags" value="design_&_illustration">
+                        <label for="design_&_illustration">design_&_illustration</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="destruction" name="tags" value="destruction">
+                        <label for="destruction">destruction</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="detective" name="tags" value="detective">
+                        <label for="detective">detective</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="difficult" name="tags" value="difficult">
+                        <label for="difficult">difficult</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="dinosaurs" name="tags" value="dinosaurs">
+                        <label for="dinosaurs">dinosaurs</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="diplomacy" name="tags" value="diplomacy">
+                        <label for="diplomacy">diplomacy</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="documentary" name="tags" value="documentary">
+                        <label for="documentary">documentary</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="dog" name="tags" value="dog">
+                        <label for="dog">dog</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="dragons" name="tags" value="dragons">
+                        <label for="dragons">dragons</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="drama" name="tags" value="drama">
+                        <label for="drama">drama</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="driving" name="tags" value="driving">
+                        <label for="driving">driving</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="dungeon_crawler" name="tags" value="dungeon_crawler">
+                        <label for="dungeon_crawler">dungeon_crawler</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="dungeons_&_dragons" name="tags" value="dungeons_&_dragons">
+                        <label for="dungeons_&_dragons">dungeons_&_dragons</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="dynamic_narration" name="tags" value="dynamic_narration">
+                        <label for="dynamic_narration">dynamic_narration</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="dystopian_" name="tags" value="dystopian_">
+                        <label for="dystopian_">dystopian_</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="early_access" name="tags" value="early_access">
+                        <label for="early_access">early_access</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="economy" name="tags" value="economy">
+                        <label for="economy">economy</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="education" name="tags" value="education">
+                        <label for="education">education</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="emotional" name="tags" value="emotional">
+                        <label for="emotional">emotional</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="epic" name="tags" value="epic">
+                        <label for="epic">epic</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="episodic" name="tags" value="episodic">
+                        <label for="episodic">episodic</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="experience" name="tags" value="experience">
+                        <label for="experience">experience</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="experimental" name="tags" value="experimental">
+                        <label for="experimental">experimental</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="exploration" name="tags" value="exploration">
+                        <label for="exploration">exploration</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="fmv" name="tags" value="fmv">
+                        <label for="fmv">fmv</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="fps" name="tags" value="fps">
+                        <label for="fps">fps</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="faith" name="tags" value="faith">
+                        <label for="faith">faith</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="family_friendly" name="tags" value="family_friendly">
+                        <label for="family_friendly">family_friendly</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="fantasy" name="tags" value="fantasy">
+                        <label for="fantasy">fantasy</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="fast_paced" name="tags" value="fast_paced">
+                        <label for="fast_paced">fast_paced</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="feature_film" name="tags" value="feature_film">
+                        <label for="feature_film">feature_film</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="female_protagonist" name="tags" value="female_protagonist">
+                        <label for="female_protagonist">female_protagonist</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="fighting" name="tags" value="fighting">
+                        <label for="fighting">fighting</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="first_person" name="tags" value="first_person">
+                        <label for="first_person">first_person</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="fishing" name="tags" value="fishing">
+                        <label for="fishing">fishing</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="flight" name="tags" value="flight">
+                        <label for="flight">flight</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="football" name="tags" value="football">
+                        <label for="football">football</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="foreign" name="tags" value="foreign">
+                        <label for="foreign">foreign</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="free_to_play" name="tags" value="free_to_play">
+                        <label for="free_to_play">free_to_play</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="funny" name="tags" value="funny">
+                        <label for="funny">funny</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="futuristic" name="tags" value="futuristic">
+                        <label for="futuristic">futuristic</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="gambling" name="tags" value="gambling">
+                        <label for="gambling">gambling</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="game_development" name="tags" value="game_development">
+                        <label for="game_development">game_development</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="gamemaker" name="tags" value="gamemaker">
+                        <label for="gamemaker">gamemaker</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="games_workshop" name="tags" value="games_workshop">
+                        <label for="games_workshop">games_workshop</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="gaming" name="tags" value="gaming">
+                        <label for="gaming">gaming</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="god_game" name="tags" value="god_game">
+                        <label for="god_game">god_game</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="golf" name="tags" value="golf">
+                        <label for="golf">golf</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="gore" name="tags" value="gore">
+                        <label for="gore">gore</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="gothic" name="tags" value="gothic">
+                        <label for="gothic">gothic</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="grand_strategy" name="tags" value="grand_strategy">
+                        <label for="grand_strategy">grand_strategy</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="great_soundtrack" name="tags" value="great_soundtrack">
+                        <label for="great_soundtrack">great_soundtrack</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="grid_based_movement" name="tags" value="grid_based_movement">
+                        <label for="grid_based_movement">grid_based_movement</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="gun_customization" name="tags" value="gun_customization">
+                        <label for="gun_customization">gun_customization</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="hack_and_slash" name="tags" value="hack_and_slash">
+                        <label for="hack_and_slash">hack_and_slash</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="hacking" name="tags" value="hacking">
+                        <label for="hacking">hacking</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="hand_drawn" name="tags" value="hand_drawn">
+                        <label for="hand_drawn">hand_drawn</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="hardware" name="tags" value="hardware">
+                        <label for="hardware">hardware</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="heist" name="tags" value="heist">
+                        <label for="heist">heist</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="hex_grid" name="tags" value="hex_grid">
+                        <label for="hex_grid">hex_grid</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="hidden_object" name="tags" value="hidden_object">
+                        <label for="hidden_object">hidden_object</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="historical" name="tags" value="historical">
+                        <label for="historical">historical</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="hockey" name="tags" value="hockey">
+                        <label for="hockey">hockey</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="horror" name="tags" value="horror">
+                        <label for="horror">horror</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="horses" name="tags" value="horses">
+                        <label for="horses">horses</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="hunting" name="tags" value="hunting">
+                        <label for="hunting">hunting</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="illuminati" name="tags" value="illuminati">
+                        <label for="illuminati">illuminati</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="indie" name="tags" value="indie">
+                        <label for="indie">indie</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="intentionally_awkward_controls" name="tags"
+                            value="intentionally_awkward_controls">
+                        <label for="intentionally_awkward_controls">intentionally_awkward_controls</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="interactive_fiction" name="tags" value="interactive_fiction">
+                        <label for="interactive_fiction">interactive_fiction</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="inventory_management" name="tags" value="inventory_management">
+                        <label for="inventory_management">inventory_management</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="investigation" name="tags" value="investigation">
+                        <label for="investigation">investigation</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="isometric" name="tags" value="isometric">
+                        <label for="isometric">isometric</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="jrpg" name="tags" value="jrpg">
+                        <label for="jrpg">jrpg</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="jet" name="tags" value="jet">
+                        <label for="jet">jet</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="kickstarter" name="tags" value="kickstarter">
+                        <label for="kickstarter">kickstarter</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="lego" name="tags" value="lego">
+                        <label for="lego">lego</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="lara_croft" name="tags" value="lara_croft">
+                        <label for="lara_croft">lara_croft</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="lemmings" name="tags" value="lemmings">
+                        <label for="lemmings">lemmings</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="level_editor" name="tags" value="level_editor">
+                        <label for="level_editor">level_editor</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="linear" name="tags" value="linear">
+                        <label for="linear">linear</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="local_co_op" name="tags" value="local_co_op">
+                        <label for="local_co_op">local_co_op</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="local_multiplayer" name="tags" value="local_multiplayer">
+                        <label for="local_multiplayer">local_multiplayer</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="logic" name="tags" value="logic">
+                        <label for="logic">logic</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="loot" name="tags" value="loot">
+                        <label for="loot">loot</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="lore_rich" name="tags" value="lore_rich">
+                        <label for="lore_rich">lore_rich</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="lovecraftian" name="tags" value="lovecraftian">
+                        <label for="lovecraftian">lovecraftian</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="mmorpg" name="tags" value="mmorpg">
+                        <label for="mmorpg">mmorpg</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="moba" name="tags" value="moba">
+                        <label for="moba">moba</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="magic" name="tags" value="magic">
+                        <label for="magic">magic</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="management" name="tags" value="management">
+                        <label for="management">management</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="mars" name="tags" value="mars">
+                        <label for="mars">mars</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="martial_arts" name="tags" value="martial_arts">
+                        <label for="martial_arts">martial_arts</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="massively_multiplayer" name="tags" value="massively_multiplayer">
+                        <label for="massively_multiplayer">massively_multiplayer</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="masterpiece" name="tags" value="masterpiece">
+                        <label for="masterpiece">masterpiece</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="match_3" name="tags" value="match_3">
+                        <label for="match_3">match_3</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="mature" name="tags" value="mature">
+                        <label for="mature">mature</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="mechs" name="tags" value="mechs">
+                        <label for="mechs">mechs</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="medieval" name="tags" value="medieval">
+                        <label for="medieval">medieval</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="memes" name="tags" value="memes">
+                        <label for="memes">memes</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="metroidvania" name="tags" value="metroidvania">
+                        <label for="metroidvania">metroidvania</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="military" name="tags" value="military">
+                        <label for="military">military</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="mini_golf" name="tags" value="mini_golf">
+                        <label for="mini_golf">mini_golf</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="minigames" name="tags" value="minigames">
+                        <label for="minigames">minigames</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="minimalist" name="tags" value="minimalist">
+                        <label for="minimalist">minimalist</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="mining" name="tags" value="mining">
+                        <label for="mining">mining</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="mod" name="tags" value="mod">
+                        <label for="mod">mod</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="moddable" name="tags" value="moddable">
+                        <label for="moddable">moddable</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="modern" name="tags" value="modern">
+                        <label for="modern">modern</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="motocross" name="tags" value="motocross">
+                        <label for="motocross">motocross</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="motorbike" name="tags" value="motorbike">
+                        <label for="motorbike">motorbike</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="mouse_only" name="tags" value="mouse_only">
+                        <label for="mouse_only">mouse_only</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="movie" name="tags" value="movie">
+                        <label for="movie">movie</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="multiplayer" name="tags" value="multiplayer">
+                        <label for="multiplayer">multiplayer</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="multiple_endings" name="tags" value="multiple_endings">
+                        <label for="multiple_endings">multiple_endings</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="music" name="tags" value="music">
+                        <label for="music">music</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="music_based_procedural_generation" name="tags"
+                            value="music_based_procedural_generation">
+                        <label for="music_based_procedural_generation">music_based_procedural_generation</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="mystery" name="tags" value="mystery">
+                        <label for="mystery">mystery</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="mystery_dungeon" name="tags" value="mystery_dungeon">
+                        <label for="mystery_dungeon">mystery_dungeon</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="mythology" name="tags" value="mythology">
+                        <label for="mythology">mythology</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="nsfw" name="tags" value="nsfw">
+                        <label for="nsfw">nsfw</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="narration" name="tags" value="narration">
+                        <label for="narration">narration</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="naval" name="tags" value="naval">
+                        <label for="naval">naval</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="ninja" name="tags" value="ninja">
+                        <label for="ninja">ninja</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="noir" name="tags" value="noir">
+                        <label for="noir">noir</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="nonlinear" name="tags" value="nonlinear">
+                        <label for="nonlinear">nonlinear</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="nudity" name="tags" value="nudity">
+                        <label for="nudity">nudity</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="offroad" name="tags" value="offroad">
+                        <label for="offroad">offroad</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="old_school" name="tags" value="old_school">
+                        <label for="old_school">old_school</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="on_rails_shooter" name="tags" value="on_rails_shooter">
+                        <label for="on_rails_shooter">on_rails_shooter</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="online_co_op" name="tags" value="online_co_op">
+                        <label for="online_co_op">online_co_op</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="open_world" name="tags" value="open_world">
+                        <label for="open_world">open_world</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="otome" name="tags" value="otome">
+                        <label for="otome">otome</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="parkour" name="tags" value="parkour">
+                        <label for="parkour">parkour</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="parody_" name="tags" value="parody_">
+                        <label for="parody_">parody_</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="party_based_rpg" name="tags" value="party_based_rpg">
+                        <label for="party_based_rpg">party_based_rpg</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="perma_death" name="tags" value="perma_death">
+                        <label for="perma_death">perma_death</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="philisophical" name="tags" value="philisophical">
+                        <label for="philisophical">philisophical</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="photo_editing" name="tags" value="photo_editing">
+                        <label for="photo_editing">photo_editing</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="physics" name="tags" value="physics">
+                        <label for="physics">physics</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="pinball" name="tags" value="pinball">
+                        <label for="pinball">pinball</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="pirates" name="tags" value="pirates">
+                        <label for="pirates">pirates</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="pixel_graphics" name="tags" value="pixel_graphics">
+                        <label for="pixel_graphics">pixel_graphics</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="platformer" name="tags" value="platformer">
+                        <label for="platformer">platformer</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="point_&_click" name="tags" value="point_&_click">
+                        <label for="point_&_click">point_&_click</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="political" name="tags" value="political">
+                        <label for="political">political</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="politics" name="tags" value="politics">
+                        <label for="politics">politics</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="pool" name="tags" value="pool">
+                        <label for="pool">pool</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="post_apocalyptic" name="tags" value="post_apocalyptic">
+                        <label for="post_apocalyptic">post_apocalyptic</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="procedural_generation" name="tags" value="procedural_generation">
+                        <label for="procedural_generation">procedural_generation</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="programming" name="tags" value="programming">
+                        <label for="programming">programming</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="psychedelic" name="tags" value="psychedelic">
+                        <label for="psychedelic">psychedelic</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="psychological" name="tags" value="psychological">
+                        <label for="psychological">psychological</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="psychological_horror" name="tags" value="psychological_horror">
+                        <label for="psychological_horror">psychological_horror</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="puzzle" name="tags" value="puzzle">
+                        <label for="puzzle">puzzle</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="puzzle_platformer" name="tags" value="puzzle_platformer">
+                        <label for="puzzle_platformer">puzzle_platformer</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="pve" name="tags" value="pve">
+                        <label for="pve">pve</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="pvp" name="tags" value="pvp">
+                        <label for="pvp">pvp</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="quick_time_events" name="tags" value="quick_time_events">
+                        <label for="quick_time_events">quick_time_events</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="rpg" name="tags" value="rpg">
+                        <label for="rpg">rpg</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="rpgmaker" name="tags" value="rpgmaker">
+                        <label for="rpgmaker">rpgmaker</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="rts" name="tags" value="rts">
+                        <label for="rts">rts</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="racing" name="tags" value="racing">
+                        <label for="racing">racing</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="real_time_tactics" name="tags" value="real_time_tactics">
+                        <label for="real_time_tactics">real_time_tactics</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="real_time" name="tags" value="real_time">
+                        <label for="real_time">real_time</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="real_time_with_pause" name="tags" value="real_time_with_pause">
+                        <label for="real_time_with_pause">real_time_with_pause</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="realistic" name="tags" value="realistic">
+                        <label for="realistic">realistic</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="relaxing" name="tags" value="relaxing">
+                        <label for="relaxing">relaxing</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="remake" name="tags" value="remake">
+                        <label for="remake">remake</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="replay_value" name="tags" value="replay_value">
+                        <label for="replay_value">replay_value</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="resource_management" name="tags" value="resource_management">
+                        <label for="resource_management">resource_management</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="retro" name="tags" value="retro">
+                        <label for="retro">retro</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="rhythm" name="tags" value="rhythm">
+                        <label for="rhythm">rhythm</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="robots" name="tags" value="robots">
+                        <label for="robots">robots</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="rogue_like" name="tags" value="rogue_like">
+                        <label for="rogue_like">rogue_like</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="rogue_lite" name="tags" value="rogue_lite">
+                        <label for="rogue_lite">rogue_lite</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="romance" name="tags" value="romance">
+                        <label for="romance">romance</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="rome" name="tags" value="rome">
+                        <label for="rome">rome</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="runner" name="tags" value="runner">
+                        <label for="runner">runner</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="sailing" name="tags" value="sailing">
+                        <label for="sailing">sailing</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="sandbox" name="tags" value="sandbox">
+                        <label for="sandbox">sandbox</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="satire" name="tags" value="satire">
+                        <label for="satire">satire</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="sci_fi" name="tags" value="sci_fi">
+                        <label for="sci_fi">sci_fi</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="science" name="tags" value="science">
+                        <label for="science">science</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="score_attack" name="tags" value="score_attack">
+                        <label for="score_attack">score_attack</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="sequel" name="tags" value="sequel">
+                        <label for="sequel">sequel</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="sexual_content" name="tags" value="sexual_content">
+                        <label for="sexual_content">sexual_content</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="shoot_em_up" name="tags" value="shoot_em_up">
+                        <label for="shoot_em_up">shoot_em_up</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="shooter" name="tags" value="shooter">
+                        <label for="shooter">shooter</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="short" name="tags" value="short">
+                        <label for="short">short</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="side_scroller" name="tags" value="side_scroller">
+                        <label for="side_scroller">side_scroller</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="silent_protagonist" name="tags" value="silent_protagonist">
+                        <label for="silent_protagonist">silent_protagonist</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="simulation" name="tags" value="simulation">
+                        <label for="simulation">simulation</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="singleplayer" name="tags" value="singleplayer">
+                        <label for="singleplayer">singleplayer</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="skateboarding" name="tags" value="skateboarding">
+                        <label for="skateboarding">skateboarding</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="skating" name="tags" value="skating">
+                        <label for="skating">skating</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="skiing" name="tags" value="skiing">
+                        <label for="skiing">skiing</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="sniper" name="tags" value="sniper">
+                        <label for="sniper">sniper</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="snow" name="tags" value="snow">
+                        <label for="snow">snow</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="snowboarding" name="tags" value="snowboarding">
+                        <label for="snowboarding">snowboarding</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="soccer" name="tags" value="soccer">
+                        <label for="soccer">soccer</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="software" name="tags" value="software">
+                        <label for="software">software</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="software_training" name="tags" value="software_training">
+                        <label for="software_training">software_training</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="sokoban" name="tags" value="sokoban">
+                        <label for="sokoban">sokoban</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="souls_like" name="tags" value="souls_like">
+                        <label for="souls_like">souls_like</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="soundtrack" name="tags" value="soundtrack">
+                        <label for="soundtrack">soundtrack</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="space" name="tags" value="space">
+                        <label for="space">space</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="space_sim" name="tags" value="space_sim">
+                        <label for="space_sim">space_sim</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="spectacle_fighter" name="tags" value="spectacle_fighter">
+                        <label for="spectacle_fighter">spectacle_fighter</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="spelling" name="tags" value="spelling">
+                        <label for="spelling">spelling</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="split_screen" name="tags" value="split_screen">
+                        <label for="split_screen">split_screen</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="sports" name="tags" value="sports">
+                        <label for="sports">sports</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="star_wars" name="tags" value="star_wars">
+                        <label for="star_wars">star_wars</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="stealth" name="tags" value="stealth">
+                        <label for="stealth">stealth</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="steam_machine" name="tags" value="steam_machine">
+                        <label for="steam_machine">steam_machine</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="steampunk" name="tags" value="steampunk">
+                        <label for="steampunk">steampunk</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="story_rich" name="tags" value="story_rich">
+                        <label for="story_rich">story_rich</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="strategy" name="tags" value="strategy">
+                        <label for="strategy">strategy</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="strategy_rpg" name="tags" value="strategy_rpg">
+                        <label for="strategy_rpg">strategy_rpg</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="stylized" name="tags" value="stylized">
+                        <label for="stylized">stylized</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="submarine" name="tags" value="submarine">
+                        <label for="submarine">submarine</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="superhero" name="tags" value="superhero">
+                        <label for="superhero">superhero</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="supernatural" name="tags" value="supernatural">
+                        <label for="supernatural">supernatural</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="surreal" name="tags" value="surreal">
+                        <label for="surreal">surreal</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="survival" name="tags" value="survival">
+                        <label for="survival">survival</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="survival_horror" name="tags" value="survival_horror">
+                        <label for="survival_horror">survival_horror</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="swordplay" name="tags" value="swordplay">
+                        <label for="swordplay">swordplay</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="tactical" name="tags" value="tactical">
+                        <label for="tactical">tactical</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="tactical_rpg" name="tags" value="tactical_rpg">
+                        <label for="tactical_rpg">tactical_rpg</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="tanks" name="tags" value="tanks">
+                        <label for="tanks">tanks</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="team_based" name="tags" value="team_based">
+                        <label for="team_based">team_based</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="tennis" name="tags" value="tennis">
+                        <label for="tennis">tennis</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="text_based" name="tags" value="text_based">
+                        <label for="text_based">text_based</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="third_person" name="tags" value="third_person">
+                        <label for="third_person">third_person</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="third_person_shooter" name="tags" value="third_person_shooter">
+                        <label for="third_person_shooter">third_person_shooter</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="thriller" name="tags" value="thriller">
+                        <label for="thriller">thriller</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="time_attack" name="tags" value="time_attack">
+                        <label for="time_attack">time_attack</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="time_management" name="tags" value="time_management">
+                        <label for="time_management">time_management</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="time_manipulation" name="tags" value="time_manipulation">
+                        <label for="time_manipulation">time_manipulation</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="time_travel" name="tags" value="time_travel">
+                        <label for="time_travel">time_travel</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="top_down" name="tags" value="top_down">
+                        <label for="top_down">top_down</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="top_down_shooter" name="tags" value="top_down_shooter">
+                        <label for="top_down_shooter">top_down_shooter</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="touch_friendly" name="tags" value="touch_friendly">
+                        <label for="touch_friendly">touch_friendly</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="tower_defense" name="tags" value="tower_defense">
+                        <label for="tower_defense">tower_defense</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="trackir" name="tags" value="trackir">
+                        <label for="trackir">trackir</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="trading" name="tags" value="trading">
+                        <label for="trading">trading</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="trading_card_game" name="tags" value="trading_card_game">
+                        <label for="trading_card_game">trading_card_game</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="trains" name="tags" value="trains">
+                        <label for="trains">trains</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="transhumanism" name="tags" value="transhumanism">
+                        <label for="transhumanism">transhumanism</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="turn_based" name="tags" value="turn_based">
+                        <label for="turn_based">turn_based</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="turn_based_combat" name="tags" value="turn_based_combat">
+                        <label for="turn_based_combat">turn_based_combat</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="turn_based_strategy" name="tags" value="turn_based_strategy">
+                        <label for="turn_based_strategy">turn_based_strategy</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="turn_based_tactics" name="tags" value="turn_based_tactics">
+                        <label for="turn_based_tactics">turn_based_tactics</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="tutorial" name="tags" value="tutorial">
+                        <label for="tutorial">tutorial</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="twin_stick_shooter" name="tags" value="twin_stick_shooter">
+                        <label for="twin_stick_shooter">twin_stick_shooter</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="typing" name="tags" value="typing">
+                        <label for="typing">typing</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="underground" name="tags" value="underground">
+                        <label for="underground">underground</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="underwater" name="tags" value="underwater">
+                        <label for="underwater">underwater</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="unforgiving" name="tags" value="unforgiving">
+                        <label for="unforgiving">unforgiving</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="utilities" name="tags" value="utilities">
+                        <label for="utilities">utilities</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="vr" name="tags" value="vr">
+                        <label for="vr">vr</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="vr_only" name="tags" value="vr_only">
+                        <label for="vr_only">vr_only</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="vampire" name="tags" value="vampire">
+                        <label for="vampire">vampire</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="video_production" name="tags" value="video_production">
+                        <label for="video_production">video_production</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="villain_protagonist" name="tags" value="villain_protagonist">
+                        <label for="villain_protagonist">villain_protagonist</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="violent" name="tags" value="violent">
+                        <label for="violent">violent</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="visual_novel" name="tags" value="visual_novel">
+                        <label for="visual_novel">visual_novel</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="voice_control" name="tags" value="voice_control">
+                        <label for="voice_control">voice_control</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="voxel" name="tags" value="voxel">
+                        <label for="voxel">voxel</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="walking_simulator" name="tags" value="walking_simulator">
+                        <label for="walking_simulator">walking_simulator</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="war" name="tags" value="war">
+                        <label for="war">war</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="wargame" name="tags" value="wargame">
+                        <label for="wargame">wargame</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="warhammer_40k" name="tags" value="warhammer_40k">
+                        <label for="warhammer_40k">warhammer_40k</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="web_publishing" name="tags" value="web_publishing">
+                        <label for="web_publishing">web_publishing</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="werewolves" name="tags" value="werewolves">
+                        <label for="werewolves">werewolves</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="western" name="tags" value="western">
+                        <label for="western">western</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="word_game" name="tags" value="word_game">
+                        <label for="word_game">word_game</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="world_war_i" name="tags" value="world_war_i">
+                        <label for="world_war_i">world_war_i</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="world_war_ii" name="tags" value="world_war_ii">
+                        <label for="world_war_ii">world_war_ii</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="wrestling" name="tags" value="wrestling">
+                        <label for="wrestling">wrestling</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="zombies" name="tags" value="zombies">
+                        <label for="zombies">zombies</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="e_sports" name="tags" value="e_sports">
+                        <label for="e_sports">e_sports</label>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+    </form>
+
+
+
+</body>
+
+</html>
