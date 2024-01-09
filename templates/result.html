@@ -179,7 +179,7 @@
                 </div>
         </form>
             </div>
-            <a href="{{ url_for('searchTag', user_id = user_id, page = 1) }}"><img
+            <a href="{{ url_for('tag', user_id = user_id) }}"><img
                     src="{{ url_for('static', filename='icon/search.png') }}"></a>
         </div>
     </nav>
@@ -214,13 +214,17 @@
             {% if result != None %}
             {% for k, v in result.items() %}
             <tr>
-                <td>{{ v["name"] }}</td>
+                <td>
+                    
+                    {{ v["name"] }}
+                </td>
                 <td>{{ v["date"] }}</td>
                 <td>{{ v["pratiopct"] }}</td>
                 <td>{{ v["pratings"] }}</td>
                 <td>{{ v["owners"] }}</td>
                 <td>{{ v["price"] }}</td>
                 <td>
+                    {{ k }}
                     <form action="{{ url_for('addGame', user_id = user_id, game_id = k, searchWay = searchWay, search = keyword, page = page) }}" method="post">
                         <button class="wishlist_button" type="submit">
                             Add to Wishlist

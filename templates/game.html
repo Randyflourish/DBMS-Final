@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="css/game.css">
+        <link rel="stylesheet" href="{{ url_for('static', filenaem='css/game.css') }}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <script src="js/index.js"></script>
+        <script src="{{ url_for('static', filename='js/index.js') }}"></script>
         <title>Steam Wishlist</title>
     </head>
     <body>
         
         <nav>
             <div>
-                <a onclick="ShowBlock('login')"><img src="icon/profile.png"></a>
+                {% if user_id == 0 or user_id == "0" or user_id[0]=='-' %}
+                <a onclick="ShowBlock('login')"><img src="{{ url_for('static', filename='icon/profile.png') }}"></a>
                 <div id="login" class="modal">
-                <form class="modal-content animate" action="/index.html" method="post">
-                    <div class="titlecontainer">
-                        <h1>Log In</h1>
-                        <span onclick="CloseBlock('login')" class="close" title="Close">&times;</span>
-                    </div>
-                    <div class="container">
-                        <label for="uname"><b>Username</b></label>
-                        <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
-                        <label for="psw"><b>Password</b></label>
-                        <input type="password" placeholder="Enter Password" name="psw" required>
-                        <button class="login_button" type="submit">Log In</button>
-                        <button class="login_button" type="button" onclick="CloseBlock('login');ShowBlock('signup')">Sign Up</button>
-                    </div>
-                </form>
+                    <form class="modal-content animate" action="{{ url_for('sign') }}" method="post">
+                        <div class="titlecontainer">
+                            <h1>Log In</h1>
+                            <span onclick="CloseBlock('login')" class="close" title="Close">&times;</span>
+                        </div>
+                        <div class="container">
+                            <label for="uname"><b>Username</b></label>
+                            <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                            <label for="psw"><b>Password</b></label>
+                            <input type="password" placeholder="Enter Password" name="psw" required>
+                            <button class="login_button" type="submit">Log In</button>
+                            <button class="login_button" type="button"
+                                onclick="CloseBlock('login');ShowBlock('signup')">Sign Up</button>
+                        </div>
+                    </form>
                 </div>
                 <div id="signup" class="modal">
-                    <form class="modal-content animate" action="/index.html" method="post">
+                    <form class="modal-content animate" action="{{ url_for('regist') }}" method="post">
                         <div class="titlecontainer">
                             <h1>Sign Up</h1>
                             <span onclick="CloseBlock('signup')" class="close" title="Close">&times;</span>
@@ -42,23 +44,84 @@
                         </div>
                     </form>
                 </div>
-                <a onclick="ShowBlock('favorite')"><img src="icon/heart.png"></a>
-                <div id="favorite" class="modal">
-                    <form class="modal-content animate">
-                    <div class="titlecontainer">
-                        <h1>Alert</h1>
-                        <span onclick="CloseBlock('favorite')" class="close" title="Close">&times;</span>
+                {% elif user_id[0] != '-' %}
+                <a onclick="ShowBlock('selection')"><img src="{{ url_for('static', filename='icon/profile.png') }}"></a>
+                <div id="selection" class="modal">
+                    <div class="modal-content animate">
+                        <div class="titlecontainer">
+                            <span onclick="CloseBlock('selection')" class="close" title="Close">&times;</span>
+                        </div>
+                        <div class="container">
+                            <button class="login_button" type="button"
+                                onclick="ShowBlock('changeinformation');CloseBlock('selection')">Change account
+                                information</button>
+                            <button class="login_button" type="button"
+                                onclick="ShowBlock('deleteaccount');CloseBlock('selection')">Delete account</button>
+                            <form action="{{ url_for('logout') }}" method="post">
+                                <button class="login_button" type="submit" onclick="CloseBlock('selection')">Log
+                                    out</button>
+                            </form>
+                        </div>
                     </div>
-                    <div class="container">
-                        <label style="text-align: center;font-size: 22px;"><b>You have not logged in yet.</b></label>
-                    </div>
+                </div>
+                <div id="changeinformation" class="modal">
+                    <form class="modal-content animate" action="{{ url_for('changeUser', user_id = user_id) }}"
+                        method="post">
+                        <div class="titlecontainer">
+                            <h1>Change information</h1>
+                            <span onclick="CloseBlock('changeinformation')" class="close" title="Close">&times;</span>
+                        </div>
+                        <div class="container">
+                            <label for="uname"><b>Username</b></label>
+                            <input class="login_input" type="text" placeholder="Enter Username" name="uname" required>
+                            <label for="psw"><b>Password</b></label>
+                            <input type="password" placeholder="Enter Password" name="psw" required>
+                            <button class="login_button" type="submit">Change</button>
+                        </div>
                     </form>
                 </div>
-            </div>
+                <div id="deleteaccount" class="modal">
+                    <form class="modal-content animate" action="{{ url_for('deleteUser', user_id = user_id) }}"
+                        method="post">
+                        <div class="titlecontainer">
+                            <h1>Change information</h1>
+                            <span onclick="CloseBlock('deleteaccount')" class="close" title="Close">&times;</span>
+                        </div>
+                        <div class="container">
+                            <label for="psw"><b>Password</b></label>
+                            <input type="password" placeholder="Enter Password" name="psw" required>
+                            <button class="login_button" type="submit" style="background-color: red;">Delete
+                                Account</button>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+                {% if user_id == 0 or user_id == "0" or user_id[0]=='-' %}
+                <a onclick="ShowBlock('favorite')"><img src="{{ url_for('static', filename='icon/heart.png') }}"></a>
+                <div id="favorite" class="modal">
+                    <form class="modal-content animate">
+                        <div class="titlecontainer">
+                            <h1>Alert</h1>
+                            <span onclick="CloseBlock('favorite')" class="close" title="Close">&times;</span>
+                        </div>
+                        <div class="container">
+                            <label style="text-align: center;font-size: 22px;"><b>You have not logged in
+                                    yet.</b></label>
+                        </div>
+                    </form>
+                </div>
+                {% elif user_id[0] != '-' %}
+                <a href="{{ url_for('favorite', user_id = user_id, page = 1) }}">
+                    <img src="{{ url_for('static', filename='icon/heart.png') }}">
+                </a>
+                {% endif %}
+                </div>
 
             <div>
-                <a href="#"><img src="icon/add.png"></a>
-                <a href="index.html"><img src="icon/home.png"></a>
+                <a href="{{ url_for('addGame', user_id = user_id, game_id = game_id, searchWay = searchWay, keyword = keyword, page = page) }}">
+                    <img src="icon/add.png">
+                </a>
+                <a href="{{ url_for('index', user_id = user_id) }}"><img src="icon/home.png"></a>
             </div>
         </nav>
         <br>

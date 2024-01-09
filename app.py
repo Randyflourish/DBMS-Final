@@ -151,18 +151,56 @@ def searchName(page = 1, user_id = 0, keyword = ""):
         "result.html", user_id = user_id, result = searchPage,
           searchWay = "Name", page = int(page), keyword = keyword, addResult = int(addResult))
    
+@app.route("/tag/<user_id>")
+def tag(user_id = 0):
+    return render_template("search.html", user_id = user_id)
 
-@app.route("/searchTag/<user_id>", methods = ["POST"])
+@app.route("/searchTag/<user_id>", methods = ["GET","POST"])
 def searchTag(page = 1, user_id = 0):
-    searchPage = None
-    return render_template("result.html", user_id = user_id, result = searchPage)
+    addResult = -2
+    tags = None
+    if request.method == "GET":
+        tag = request.args.get("search")
+        addResult = request.args.get("addResult")
+    else:
+        try:
+            tags = request.form.getlist("tags")
+            """
+            sort_cond = request.form["condition"]
+            order = request.form["order"]
+            order_bool = True
+            if order == "Order":
+                order_bool = True
+            else:
+                order_bool = False
+            sql_command.modifySorting(sort_cond, order_bool)
+            """
+        except:
+            keyword = request.args.get("search")
 
+    searchResult = sql_command.searchByTag(tags)
+    
+    page = int(page)
+    if page <= 0:
+        page = 1
+    elif page*10 - len(searchResult) >= 10:
+        page -= 1
+
+    searchList = sql_command.takePage(int(page), searchResult)
+    searchPage = sql_command.appShortInfo(searchList)
+    
+    # just doing the handover    
+    return render_template(
+        "result.html", user_id = user_id, result = searchPage,
+          searchWay = "Tag", page = int(page), keyword = tags, addResult = int(addResult))
+    
+    
 # end of handling search
 #####################################################################
 #####################################################################
 # handling add or delete game
 
-@app.route("/addGame", methods = ["POST"])
+@app.route("/addGame", methods = ["GET", "POST"])
 def addGame():
     user_id = request.args.get("user_id")
     game_id = request.args.get("game_id")
@@ -175,23 +213,30 @@ def addGame():
         print("BLOCK")
         if searchWay == "Name":
             return redirect(url_for("searchName", user_id = int(user_id), page = int(page), search = keyword, addResult = 0))
-        
+        elif searchWay == "Tag":
+            return redirect(url_for("searchTag", user_id = int(user_id), page = int(page), search = keyword, addResult = 0))
     print(str(user_id), str(game_id))
     result = sql_command.insertAppIntoFList(str(user_id), str(game_id))
     if result == 0:
         # addResult == -1 -> failed
         if searchWay == "Name":
             return redirect(url_for("searchName", user_id = int(user_id), page = int(page), search = keyword, addResult = -1))
+        elif searchWay == "Tag":
+            return redirect(url_for("searchTag", user_id = int(user_id), page = int(page), search = keyword, addResult = -1))
     elif result == 1:
         # addResult == 1 -> success
         if searchWay == "Name":
             return redirect(url_for("searchName", user_id = int(user_id), page = int(page), search = keyword, addResult = 1))
+        elif searchWay == "Tag":
+            return redirect(url_for("searchTag", user_id = int(user_id), page = int(page), search = keyword, addResult = 1))
 
 @app.route("/deleteGame", methods = ["POST"])
 def deleteGame():
     user_id = request.args.get("user_id")
     game_id = request.args.get("game_id")
-
+    
+    print(sql_command.showAppFromFList(str(user_id)))
+    print("game_id =", game_id)
     result = sql_command.deleteAppFromFList(str(user_id), str(game_id))
     return redirect(url_for("favorite", user_id = int(user_id), page = 1, deleteResult = result))
 
@@ -199,7 +244,7 @@ def deleteGame():
 # end of adding or deleting games
 ################################################################################
 ################################################################################
-# handling routing of favotite list
+# handling routing of favotite list and game detail
 
 @app.route("/favorite/<user_id>", methods = ["GET", "POST"])
 def favorite(user_id = 0):
@@ -227,7 +272,10 @@ def favorite(user_id = 0):
     deleteResult = request.args.get("deleteResult")
     return render_template("wishlist.html", user_id = user_id, wishlist = favoritePage, deleteResult = deleteResult)
 
-
+@app.route("/gameInfo/<game_id>")
+def gameInfo(game_id = 0):
+    user_id = request.args.get("user_id")
+    return 
 
 # end of handling routing of favorite list
 ################################################################################
