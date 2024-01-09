@@ -751,4 +751,3 @@ searchResult = searchByName(["neko"])
 for info in appShortInfo(takePage(1, searchResult)).values():
     print(info)
 """
-deleteAppFromFList(2, 570840)
