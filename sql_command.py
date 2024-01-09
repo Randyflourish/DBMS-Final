@@ -347,8 +347,9 @@ def deleteAppFromFList(uid: str, appid: str) -> bool:
     sql_command = "SELECT COUNT(*) FROM flist_data WHERE listid = %s AND appid = %s"
     mycursor.execute(sql_command, mytup)
     results = mycursor.fetchall()
+    mycursor.reset()
     cnt = results[0][0]
-    if cnt != 0:
+    if cnt == 0:
         return 0
     sql_command = "DELETE FROM flist_data WHERE listid = %s AND appid = %s"
     mycursor.execute(sql_command, mytup)
@@ -750,3 +751,4 @@ searchResult = searchByName(["neko"])
 for info in appShortInfo(takePage(1, searchResult)).values():
     print(info)
 """
+deleteAppFromFList(2, 570840)
