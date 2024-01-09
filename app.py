@@ -138,7 +138,6 @@ def searchName(page = 1, user_id = 0, keyword = ""):
             keyword = request.args.get("search")
 
     keywords_list = keyword.replace("[", "").replace("]", "").replace("'", "").split(", ")
-    print(keywords_list)
     searchResult = sql_command.searchByName(keywords_list)
 
     page = int(page)
