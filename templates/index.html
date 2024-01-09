@@ -134,43 +134,43 @@
                         <h3>Condition</h3>
                         <div class="radio-item">
                             <input class="login_input" type="radio" id="name" name="condition" value="name" checked>
-                            <label for="name"><b>Name</b></label>
+                            <label for="name"><b>遊戲名稱</b></label>
                         </div>
                         <div class="radio-item">
                             <input class="login_input" type="radio" id="date" name="condition" value="release_date">
-                            <label for="date"><b>Date</b></label>
+                            <label for="date"><b>發行日期</b></label>
                         </div>
                         <div class="radio-item">
                             <input class="login_input" type="radio" id="pratio" name="condition" value="pratio">
-                            <label for="pratio"><b>Pratio</b></label>
+                            <label for="pratio"><b>好評率</b></label>
                         </div>
                         <div class="radio-item">
                             <input class="login_input" type="radio" id="prating" name="condition"
                                 value="positive_ratings">
-                            <label for="prating"><b>Prating</b></label>
+                            <label for="prating"><b>好評數</b></label>
                         </div>
                         <div class="radio-item">
                             <input class="login_input" type="radio" id="owners" name="condition" value="owners">
-                            <label for="owners"><b>Owners</b></label>
+                            <label for="owners"><b>遊玩人數</b></label>
                         </div>
                         <div class="radio-item">
                             <input class="login_input" type="radio" id="Price" name="condition" value="price">
-                            <label for="Price"><b>Price</b></label>
+                            <label for="Price"><b>價格</b></label>
                         </div>
 
                         <h3>Order</h3>
                         <div class="radio-item">
                             <input class="login_input" type="radio" id="order" name="order" value="Order" checked>
-                            <label for="order"><b>Order</b></label>
+                            <label for="order"><b>順序</b></label>
                         </div>
                         <div class="radio-item">
                             <input class="login_input" type="radio" id="reverseorder" name="order" value="ROrder">
-                            <label for="reverseorder"><b>Reverse Order</b></label>
+                            <label for="reverseorder"><b>倒序</b></label>
 
                         </div>
                         <div class="radio-item">
                             <input class="login_input" type="radio" id="noorder" name="order" value="NOrder">
-                            <label for="noorder"><b>No Order</b></label>
+                            <label for="noorder"><b>不排序</b></label>
                         </div>
                         <br>
                         <button class="login_button" type="button" onclick="CloseBlock('sort')">OK</button>
@@ -185,10 +185,10 @@
         </div>
     </nav>
     <br>
-    <div style="text-align: center;">
+    <div class="alert">
         {% if user_id == 0 or user_id == "0" %}
         <h1>
-            Not login yet.
+            Not login yet
         </h1>
         {% elif user_id == "-1" %}
         <h1>
@@ -196,7 +196,7 @@
         </h1>
         {% elif user_id == "-2" %}
         <h1>
-            User account has been used.
+            User account has been used
         </h1>
         {% elif user_id == "-3" %}
         <h1>
@@ -220,7 +220,7 @@
 
         {% elif user_id[0] != '-' %}
         <h1>
-            Hello {{ user_name }}
+            Hello, {{ user_name }}
         </h1>
         {% endif %}
     </div>

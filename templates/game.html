@@ -129,45 +129,19 @@
         </div>
     </nav>
     <br>
-    <div style="text-align: center;">
-
-        {% if addResult == 0 or addResult == "0" %}
-        <h2>
-            尚未登入，請先登入。
-        </h2>
-        {% elif addResult == 1 or addResult == "1" %}
-        <h2>
-            添加成功。
-        </h2>
-        {% elif addResult == -1 or addResult == "-1" %}
-        <h2>
-            添加失敗，此遊戲已經在願望清單中。
-        </h2>
-        {% else %}
-        {% endif %}
-
-    </div>
-    <div class="wishlist">
+    {% if addResult == 0 or addResult == "0" %}
+    <script>alert('尚未登入，請先登入。');</script>
+    {% elif addResult == 1 or addResult == "1" %}
+    <script>alert('新增成功。');</script> 
+    {% elif addResult == -1 or addResult == "-1" %}
+    <script>alert('新增失敗，此遊戲已經在願望清單中。');</script> 
+    {% else %}
+    {% endif %}
+    <div class="gamelist">
         <table>
+            
             <tr>
-                <th colspan="2" rowspan="4">
-                    <img style="width: 400px;" src="{{ game_info['headimg'] }}">
-                </th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Categories</th>
-                <th>Genres</th>
-                <th>Tags</th>
-            </tr>
-            <tr>
-                <td>{{ game_info["name"] }}</td>
-                <td>{{ game_info["price"] }}</td>
-                <td>{{ game_info["categories"] }}</td>
-                <td>{{ game_info["genres"] }}</td>
-                <td>{{ game_info["tags"] }}</td>
-            </tr>
-            <tr>
-
+                <th colspan="2">遊戲名稱</th>
                 <th>好評數</th>
                 <th>好評率</th>
                 <th>持有人數</th>
@@ -175,6 +149,7 @@
                 <th>中位遊玩時間</th>
             </tr>
             <tr>
+                <td colspan="2">{{ game_info["name"] }}</td>
                 <td>{{ game_info["pratings"] }}</td>
                 <td>{{ game_info["pratiopct"] }}</td>
                 <td>{{ game_info["owners"] }}</td>
@@ -182,23 +157,40 @@
                 <td>{{ game_info["medtime"] }}</td>
             </tr>
             <tr>
-                <th colspan="2">支援系統平台</th>
+                <th colspan="2">價格</th>
                 <th>發布日期</th>
+                <th>支援系統平台</th>
                 <th>開發商</th>
                 <th>出版商</th>
-                <th>年齡</th>
-                <th>詳細介紹</th>
+                <th>最低遊玩年齡</th>
+                
             </tr>
             <tr>
-                <td colspan="2">{{ game_info["platforms"] }}</td>
+                <td colspan="2">{{ game_info["price"] }}</td>
                 <td>{{ game_info["date"] }}</td>
+                <td>{{ game_info["platforms"] }}</td>
                 <td>{{ game_info["developer"] }}</td>
                 <td>{{ game_info["publisher"] }}</td>
                 <td>{{ game_info["age"] }}</td>
-                <td>
-                    <textarea>
+            </tr>
+            <tr>
+                <td colspan="2" rowspan="2" style="background-color: white;">
+                    <img class="gameimg" src="{{ game_info['headimg'] }}">
+                </td>
+                <th>類別</th>
+                <th>風格</th>
+                <th>Tags</th>
+                <th colspan="2">詳細介紹</th>
+            </tr>
+            <tr>
+                
+                <td>{{ game_info["categories"] }}</td>
+                <td>{{ game_info["genres"] }}</td>
+                <td>{{ game_info["tags"] }}</td>
+                <td colspan="2">
+                    <div class="gameinfo">
                         {{ game_info["desc"] }}
-                    </textarea>
+                    </div>
                 </td>
             </tr>
         </table>

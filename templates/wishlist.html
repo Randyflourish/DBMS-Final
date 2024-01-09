@@ -130,23 +130,32 @@
     <br>
     <div style="text-align: center;">
         {% if deleteResult == "1" %}
-        <h2>
-            刪除成功。
-        </h2>
+        <script>alert('刪除成功。');</script> 
         {% else %}
         {% endif %}
     </div>
     <div class="gamelist">
         <table>
             <tr>
-                <th>Name</th>
-                <th>Date</th>
+                <th>遊戲名稱</th>
+                <th>發行日期</th>
                 <th>好評率</th>
                 <th>好評數</th>
                 <th>遊玩人數</th>
                 <th>價格</th>
                 <th>從願望清單移除</th>
             </tr>
+            {% if not wishlist %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% else %}
             {% for k, v in wishlist.items() %}
             <tr>
                 <td>
@@ -161,11 +170,12 @@
                 <td>{{ v["price"] }}</td>
                 <td>
                     <form action="{{ url_for('deleteGame', user_id = user_id, game_id = k) }}" method="post">
-                        <button class="wishlist_button" type="submit">Remove from Wishlist</button>
+                        <button class="wishlist_button" type="submit"><b>Remove from Wishlist</b></button>
                     </form>
                 </td>
             </tr>
             {% endfor %}
+            {% endif %}
         </table>
     </div>
     <div class="turnpage">

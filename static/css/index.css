@@ -232,7 +232,7 @@ img{
 
 .gamelist{
   margin: 0.5%;
-  height: 80%;
+  height: 77%;
   border-radius: 15px;
   border: 2px solid;
 }
@@ -246,10 +246,16 @@ table {
   overflow: hidden;
 }
 
+td,th{
+  max-width: 150px;
+  max-height: 10px;
+}
+
 td {
   border: 1px solid black;
   text-align: center;
   background-color: #ddd;
+  font-size: 1rem;
 }
 
 th {
@@ -257,7 +263,7 @@ th {
   padding: 8px;
   text-align: center;
   height: 5%;
-  font-size: 120%;
+  font-size: 15px;
 }
 
 .wishlist_button {
@@ -267,11 +273,24 @@ th {
   font-size:medium;
   border: none;
   cursor: pointer;
-  width: 50%;
-  height: 30px;
+  width: 60%;
+  height: 45px;
   border-radius: 15px;
 }
 
 .wishlist_button:hover{
   opacity: 0.7;
+}
+
+.alert{
+  height: 60%;
+  margin: 10%;
+}
+
+.alert h1{
+  border-radius: 2em;
+	background-color: #edf0f4;
+  padding: 10%;
+  text-align: center;
+  color: rgb(59, 56, 56);
 }
