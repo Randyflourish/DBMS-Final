@@ -117,6 +117,63 @@ width: 40px;
     to {transform: scale(1)}
 }
   
+
+.radio-item [type="radio"] {
+    display: none;
+  }
+  
+  .radio-item + .radio-item {
+    margin-top: 3px;
+  }
+  
+  .radio-item label {
+    color: white;
+    display: block;
+    padding: 10px 50px 10px 50px;
+    background: #04AA6D;
+    border: 2px solid;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 400;
+    white-space: nowrap;
+    position: relative;
+  }
+  
+  .radio-item label:after,.radio-item label:before {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+  }
+    
+  .radio-item label:after {
+    height: 15px;
+    width: 15px;
+    border: 2px solid gray;
+    left: 10px;
+    top: calc(50% - 10px);
+  }
+  
+  .radio-item label:before {
+    background: gray;
+    height: 16px;
+    width: 16px;
+    left: 12px;
+    top: calc(50% - 8px);
+    transform: scale(4);
+    opacity: 0;
+    visibility: hidden;
+  
+  }
+  .radio-item [type="radio"]:checked ~ label {
+    border-color: gray;
+  }
+  .radio-item [type="radio"]:checked ~ label::before {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+
 .gameimg{
     width: 100px;
 }
@@ -171,7 +228,7 @@ input[type="checkbox"] + label {
     transition: background-color .2s, box-shadow .2s;
 }
 
-label::before {
+.taglist label::before {
     border: 3px solid #fff;
     border-radius: 100px;
     transition: background-color .2s;
