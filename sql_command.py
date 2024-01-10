@@ -3,8 +3,8 @@ import mysql.connector
 # Note: Please use string as all arguments' type
 
 mydb = mysql.connector.connect(
-    host="140.113.68.114",
-    # host="localhost",
+    # host="140.113.68.114",
+    host="localhost",
     user="manager",
     password="toServer111550009",
     database="db_final"
@@ -371,6 +371,8 @@ def deleteAppFromFList(uid: str, appid: str) -> bool:
 # 0: account has been used, id: new account id
 def createUserAccount(userName: str, userPass: str) -> int:
     global mydb, mycursor
+    if ' ' in userName or ' ' in userPass:
+        return 0
     sql_command = "SELECT COUNT(username) FROM user_data WHERE username = %s"
     mytup = (userName, )
     mycursor.execute(sql_command, mytup)
@@ -435,6 +437,8 @@ def renameUserAccount(uid: str, newname: str) -> int:
     global mycursor, mydb
     if type(uid) != str:
         uid = str(uid)
+    if ' ' in newname:
+        return 0
     mytup = (newname, uid)
     sql_command = "SELECT count(*) FROM user_data WHERE username = %s and userid <> %s"
     mycursor.execute(sql_command, mytup)
@@ -454,6 +458,8 @@ def resetUserPassword(uid: str, newPass: str) -> int:
     global mycursor, mydb
     if type(uid) != str:
         uid = str(uid)
+    if ' ' in newPass:
+        return 0
     mytup = (newPass, uid)
     sql_command = "UPDATE user_data SET userpassword = %s WHERE userid = %s"
     mycursor.execute(sql_command, mytup)

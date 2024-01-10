@@ -87,9 +87,13 @@ def changeUser(user_id = 0):
     new_account = request.form["uname"]
     new_password = request.form["psw"]
 
+    original_name = sql_command.getUserName(user_id)
     account_result = sql_command.renameUserAccount(user_id, new_account)
     if account_result == 1:
         password_result = sql_command.resetUserPassword(user_id, new_password)
+        if password_result == 0:
+            sql_command.renameUserAccount(user_id, original_name)
+            return redirect(url_for("index", user_id = -4))
     else:
         return redirect(url_for("index", user_id = -4))
 
